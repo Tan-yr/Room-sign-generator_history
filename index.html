@@ -67,6 +67,26 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(17,24,39,0.25); }
     h2 { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin: 0 0 12px 0; text-transform: capitalize; letter-spacing: 0.08em; }
     .panel-card { background: #ffffff; border: 1px solid var(--border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 16px; }
+    /* Explicit typography alignment for merged right-side cards */
+    #signSizePanel > h2,
+    #strokePanel > h2,
+    #singleTextPanel > h2 {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin: 0 0 12px 0;
+      text-transform: capitalize;
+      letter-spacing: 0.08em;
+    }
+    #basePlateGapPanel .frame-row-label,
+    #strokePanel .frame-row-label,
+    #singleTextPanel .frame-row-label {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
     .sidebar-header { padding: 0 4px; margin-bottom: 4px; }
     .sidebar-header-title { font-size: 16px; font-weight: 600; color: #1e293b; margin: 0 0 16px 0; letter-spacing: 0; text-transform: none; }
     .unit-toggle { display: flex; background: #f1f5f9; border-radius: 8px; padding: 4px; gap: 4px; }
@@ -105,6 +125,13 @@
     .frame-input-field::-webkit-outer-spin-button, .frame-input-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .frame-input-box.editing .frame-input-value, .frame-input-box.editing .frame-input-unit { opacity: 0; }
     .frame-input-box.editing .frame-input-field { opacity: 1; pointer-events: auto; }
+    /* Spacing polish for merged parameter cards (Text/Icon) */
+    #singleTextPanel .frame-row + .frame-row,
+    #strokePanel .frame-row + .frame-row { margin-top: 14px; }
+    #singleTextPanel .frame-row,
+    #strokePanel .frame-row { gap: 12px; }
+    #singleTextPanel .frame-input-box,
+    #strokePanel .frame-input-box { height: 40px; padding: 0 14px; max-width: 132px; }
 
     .draggable-number-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
     .draggable-number-row:last-child { margin-bottom: 0; }
@@ -269,6 +296,7 @@
     .size-field:focus-within { background: #e8eaed; }
     .size-field.dragging { background: #e2e5e9; }
     #singleTextInput, #singleTextFont { width: 100%; }
+    #singleTextFont { display: none; }
     .lock-btn { flex-shrink: 0; width: 28px; height: 28px; padding: 0; border: 1px solid var(--border-default); border-radius: 6px; background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: none; transition: all 120ms; }
     .lock-btn:hover { background: var(--bg-soft); color: var(--text-primary); }
     .lock-btn svg { width: 14px; height: 14px; }
@@ -279,9 +307,31 @@
     .sidebar-row-label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
     .sidebar-text-input { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--border-default); border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-primary); background: var(--bg-input); outline: none; }
     .sidebar-text-input:focus { border-color: var(--accent-primary); }
-    .sidebar-font-select { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--border-default); border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-primary); background: var(--bg-input); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+    .sidebar-font-select { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--border-default); border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-primary); background: var(--bg-input); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; display: flex; align-items: center; }
     .sidebar-font-select:focus { border-color: var(--accent-primary); }
+    #singleTextFontLabel { display: block; line-height: 1; }
     .sidebar-panel-disabled { opacity: 0.45; pointer-events: none; }
+    .font-picker-modal { position: fixed; inset: 0; z-index: 120; display: none; pointer-events: none; }
+    .font-picker-modal.open { display: block; pointer-events: auto; }
+    .font-picker-backdrop { position: absolute; inset: 0; background: transparent; }
+    .font-picker-sheet { position: fixed; left: 16px; top: 16px; width: 380px; height: calc(100vh - 32px); background: #ffffff; border: 1px solid var(--border-default); border-radius: 14px; box-shadow: 0 12px 32px rgba(17,24,39,0.18); display: flex; flex-direction: column; overflow: hidden; }
+    .font-picker-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-default); }
+    .font-picker-title { font-size: 30px; font-weight: 700; color: var(--text-primary); }
+    .font-picker-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-default); background: #f3f4f6; color: #6b7280; box-shadow: none; }
+    .font-picker-body { padding: 14px 16px 10px; display: flex; flex-direction: column; gap: 12px; min-height: 0; flex: 1; }
+    .font-picker-search { width: 100%; height: 42px; border-radius: 10px; border: 1px solid #111827; padding: 0 12px; font-size: 18px; }
+    .font-picker-cats { display: flex; gap: 8px; flex-wrap: wrap; }
+    .font-picker-chip { width: auto; height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--border-default); background: #f8fafc; color: #4b5563; font-size: 14px; font-weight: 500; box-shadow: none; }
+    .font-picker-chip.active { background: #111827; border-color: #111827; color: #fff; }
+    .font-picker-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px; }
+    .font-picker-item { width: 100%; border: 1px solid var(--border-default); border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; cursor: pointer; transition: all 120ms ease; }
+    .font-picker-item:hover { border-color: #d1d5db; box-shadow: 0 2px 8px rgba(17,24,39,0.08); }
+    .font-picker-item.selected { border-color: #111827; box-shadow: 0 0 0 2px rgba(17,24,39,0.12); background: #f9fafb; }
+    .font-picker-name { font-size: 18px; color: var(--text-primary); }
+    .font-picker-meta { display: flex; align-items: center; gap: 10px; }
+    .font-picker-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #f3f4f6; color: #9ca3af; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .font-picker-check { font-size: 18px; color: #111827; line-height: 1; visibility: hidden; }
+    .font-picker-item.selected .font-picker-check { visibility: visible; }
 
     /* Export JSON floating button (top-right of canvas) */
     .canvas-export-json-btn { display: flex; align-items: center; gap: 6px; padding: 7px 13px; background: rgba(255,255,255,0.95); border: 1px solid var(--border-default); border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; box-shadow: 0 2px 8px rgba(17,24,39,0.08); transition: all 150ms ease; width: auto; height: auto; backdrop-filter: blur(8px); }
@@ -336,13 +386,21 @@
 
       <!-- Contour Gap panel -->
       <div class="panel-card" id="strokePanel">
-        <h2>Contour Gap</h2>
+        <h2>Icon</h2>
         <div class="frame-row">
-          <span class="frame-row-label">Gap</span>
+          <span class="frame-row-label">Contour Gap</span>
           <div class="frame-input-box" data-input="inStrokeWidth" data-min="0" data-max="10" data-step="0.5" data-decimals="1">
-            <span class="frame-input-value">2</span>
-            <input type="number" class="frame-input-field" id="inStrokeWidthNum" min="0" max="10" step="0.5" value="2">
+            <span class="frame-input-value">1.0</span>
+            <input type="number" class="frame-input-field" id="inStrokeWidthNum" min="0" max="10" step="0.5" value="1.0">
             <span class="frame-input-unit">mm</span>
+          </div>
+        </div>
+        <div class="frame-row" id="iconWeightRow" style="display:none;">
+          <span class="frame-row-label">Icon Weight</span>
+          <div class="frame-input-box" data-input="inIconWeight" data-min="20" data-max="300" data-step="1" data-decimals="0">
+            <span class="frame-input-value">100</span>
+            <input type="number" class="frame-input-field" id="inIconWeightNum" min="20" max="300" step="1" value="100">
+            <span class="frame-input-unit">%</span>
           </div>
         </div>
       </div>
@@ -353,60 +411,8 @@
         <div class="frame-row">
           <span class="frame-row-label">Gap</span>
           <div class="frame-input-box" data-input="inBasePlateGap" data-min="0" data-max="10" data-step="0.5" data-decimals="1">
-            <span class="frame-input-value">0</span>
-            <input type="number" class="frame-input-field" id="inBasePlateGapNum" min="0" max="10" step="0.5" value="0">
-            <span class="frame-input-unit">mm</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Icon Weight panel -->
-      <div class="panel-card" id="iconWeightPanel" style="display:none;">
-        <h2>Icon Weight</h2>
-        <div class="frame-row">
-          <span class="frame-row-label">Scale</span>
-          <div class="frame-input-box" data-input="inIconWeight" data-min="20" data-max="300" data-step="1" data-decimals="0">
-            <span class="frame-input-value">100</span>
-            <input type="number" class="frame-input-field" id="inIconWeightNum" min="20" max="300" step="1" value="100">
-            <span class="frame-input-unit">%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Letter Spacing panel -->
-      <div class="panel-card" id="letterSpacingPanel">
-        <h2>Letter Spacing</h2>
-        <div class="frame-row">
-          <span class="frame-row-label">Spacing</span>
-          <div class="frame-input-box" data-input="inLetterSpacing" data-min="-5" data-max="30" data-step="1" data-decimals="0">
-            <span class="frame-input-value">0</span>
-            <input type="number" class="frame-input-field" id="inLetterSpacingNum" min="-5" max="30" step="1" value="0">
-            <span class="frame-input-unit">%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Text Weight panel -->
-      <div class="panel-card" id="textWeightPanel" style="display:none;">
-        <h2>Text Weight</h2>
-        <div class="frame-row">
-          <span class="frame-row-label">Weight</span>
-          <div class="frame-input-box" data-input="inTextWeight" data-min="-60" data-max="80" data-step="1" data-decimals="0">
-            <span class="frame-input-value">0</span>
-            <input type="number" class="frame-input-field" id="inTextWeightNum" min="-60" max="80" step="1" value="0">
-            <span class="frame-input-unit">%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Text Contour Gap panel -->
-      <div class="panel-card" id="textContourGapPanel" style="display:none;">
-        <h2>Text Contour Gap</h2>
-        <div class="frame-row">
-          <span class="frame-row-label">Gap</span>
-          <div class="frame-input-box" data-input="inTextContourGap" data-min="0" data-max="10" data-step="0.5" data-decimals="1">
-            <span class="frame-input-value">2</span>
-            <input type="number" class="frame-input-field" id="inTextContourGapNum" min="0" max="10" step="0.5" value="2">
+            <span class="frame-input-value">1.0</span>
+            <input type="number" class="frame-input-field" id="inBasePlateGapNum" min="0" max="10" step="0.5" value="1.0">
             <span class="frame-input-unit">mm</span>
           </div>
         </div>
@@ -421,7 +427,34 @@
         </div>
         <div class="control-group">
           <label for="singleTextFont">Font</label>
+          <div id="singleTextFontTrigger" class="sidebar-font-select" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="fontPickerModal">
+            <span id="singleTextFontLabel">Pacifico</span>
+          </div>
           <select id="singleTextFont"></select>
+        </div>
+        <div class="frame-row" id="textLetterSpacingRow" style="display:none;">
+          <span class="frame-row-label">Letter Spacing</span>
+          <div class="frame-input-box" data-input="inLetterSpacing" data-min="-5" data-max="30" data-step="1" data-decimals="0">
+            <span class="frame-input-value">0</span>
+            <input type="number" class="frame-input-field" id="inLetterSpacingNum" min="-5" max="30" step="1" value="0">
+            <span class="frame-input-unit">%</span>
+          </div>
+        </div>
+        <div class="frame-row" id="textWeightRow" style="display:none;">
+          <span class="frame-row-label">Text Weight</span>
+          <div class="frame-input-box" data-input="inTextWeight" data-min="-60" data-max="80" data-step="1" data-decimals="0">
+            <span class="frame-input-value">0</span>
+            <input type="number" class="frame-input-field" id="inTextWeightNum" min="-60" max="80" step="1" value="0">
+            <span class="frame-input-unit">%</span>
+          </div>
+        </div>
+        <div class="frame-row" id="textContourGapRow" style="display:none;">
+          <span class="frame-row-label">Contour Gap</span>
+          <div class="frame-input-box" data-input="inTextContourGap" data-min="0" data-max="10" data-step="0.5" data-decimals="1">
+            <span class="frame-input-value">2</span>
+            <input type="number" class="frame-input-field" id="inTextContourGapNum" min="0" max="10" step="0.5" value="2">
+            <span class="frame-input-unit">mm</span>
+          </div>
         </div>
         <button type="button" class="primary" id="btnSingleAddText">Update Text</button>
       </div>
@@ -520,6 +553,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export JSON
       </button>
+      <button type="button" class="canvas-export-json-btn" id="btnImportJSON" title="Import JSON">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import JSON
+      </button>
       <button type="button" class="preview-3d-btn" id="btnView3D">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 7.2v9.6L12 21l7.5-4.2V7.2L12 3z"></path><path d="M12 12 4.5 7.2"></path><path d="M12 12l7.5-4.8"></path><path d="M12 12v9"></path></svg>
         <span>3D Preview</span>
@@ -594,6 +631,20 @@
     <div class="workspace-files-view" id="workspaceFilesView"><canvas id="cv2d"></canvas></div>
     <div class="workspace-3d-view" id="workspace3DView"></div>
   </div>
+  <div id="fontPickerModal" class="font-picker-modal" aria-hidden="true">
+    <div class="font-picker-backdrop" id="fontPickerBackdrop"></div>
+    <div class="font-picker-sheet" id="fontPickerSheet" role="dialog" aria-modal="true" aria-label="Choose Font">
+      <div class="font-picker-head">
+        <div class="font-picker-title">Choose Font</div>
+        <button type="button" class="font-picker-close" id="fontPickerClose" aria-label="Close">×</button>
+      </div>
+      <div class="font-picker-body">
+        <input type="text" id="fontPickerSearch" class="font-picker-search" placeholder="Search fonts...">
+        <div class="font-picker-cats" id="fontPickerCats"></div>
+        <div class="font-picker-list" id="fontPickerList"></div>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
   <script>
@@ -657,7 +708,7 @@
 };
 
     const SVG_TEMPLATES={
-      biscuit:{name:'Biscuit',svg:'<?xml version="1.0"?>\n<!-- Created with xTool Creative Space (https://www.xtool.com/pages/software) -->\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xcs="https://www.xtool.com/pages/software" version="1.1" preserveAspectRatio="xMinYMin meet" width="314.0084788006255mm" height="315.83741845025014mm" viewBox="436.63707275599376 49.9192118692099 314.0084788006255 315.83741845025014" xcs:version="1.6.6"><style></style>\n<path transform="matrix(0.352782,0,0,0.352782,436.636337,49.918889)" stroke="#000000" fill="none" vector-effect="non-scaling-stroke" data-view-type="laser" d="M423.79271 1.64274C394.87771 8.00174 370.46470999999997 25.12674 353.77171 50.757740000000005 346.92271 61.27474000000001 343.90171 64.75774000000001 341.62971 64.75774000000001 340.54771 64.75774000000001 335.52970999999997 62.53174000000001 330.47771 59.80974000000001 319.71471 54.012740000000015 303.39071 48.32774000000001 292.79271 46.686740000000015 281.78271 44.981740000000016 258.24771 46.000740000000015 248.52971 48.603740000000016 223.37171 55.341740000000016 201.01871 71.40774000000002 186.82371 92.95474000000002 175.64871 109.91774000000001 170.15471 127.44874000000002 168.93871000000001 150.02774000000002 167.94671000000002 168.41974000000002 168.48171000000002 167.88374000000002 150.07171000000002 168.91574000000003 119.70071000000003 170.61874000000003 95.84271000000003 180.83274000000003 76.34271000000003 200.48274000000004 40.90171000000002 236.19474000000002 35.20371000000002 290.74374 62.35371000000002 334.39374000000004 68.34471000000002 344.02474000000007 68.22171000000002 345.01074000000006 60.54271000000002 348.87074 42.619710000000026 357.88174000000004 24.467710000000018 374.22974 15.590710000000023 389.35674 3.2197100000000223 410.43474-1.8962899999999756 433.17274 0.6267100000000223 455.86074 4.728710000000023 492.75074 24.59471000000002 523.15674 56.95371000000002 542.06974 61.744710000000026 544.8707400000001 65.87071000000002 547.9477400000001 66.12171000000002 548.90774 66.37571000000003 549.87874 64.56071000000003 553.89474 62.03271000000002 557.95574 35.50371000000003 600.57174 40.97771000000002 653.66274 75.64671000000003 689.9917399999999 99.16471000000003 714.6357399999999 125.19371000000002 725.2897399999999 162.97171000000003 725.7377399999999 166.61471000000003 725.7807399999999 167.79271000000003 728.54874 167.79871000000003 737.0787399999999 167.83571000000003 788.29874 202.35371000000004 833.3687399999999 251.58671000000004 846.4797399999999 260.01571 848.7247399999999 263.39671000000004 849.0737399999999 277.29271000000006 849.1347399999999 290.9867100000001 849.1947399999998 294.57971000000003 848.8687399999999 302.22571000000005 846.8707399999998 313.71771000000007 843.8677399999998 324.97971000000007 839.0947399999999 334.34271000000007 833.2587399999999 339.4167100000001 830.0967399999998 342.40871000000004 828.8187399999998 343.74671000000006 829.2427399999999 344.82471000000004 829.5857399999999 347.15571000000006 832.42874 348.92671000000007 835.5617399999999 354.61771000000005 845.6327399999999 359.87471000000005 852.8387399999999 367.01371000000006 860.3537399999999 391.14071000000007 885.7527399999999 423.2287100000001 898.1027399999999 456.3737100000001 894.74574 470.3077100000001 893.3337399999999 479.28971000000007 890.6697399999999 493.29271000000006 883.79374 513.5837100000001 873.83074 529.9777100000001 858.5837399999999 540.4357100000001 839.95074 543.01971 835.34674 546.1917100000001 830.88674 547.4847100000001 830.03974 549.69671 828.5907400000001 550.17371 828.7067400000001 555.56371 832.01074 580.49071 847.2877400000001 605.04071 852.5627400000001 631.29271 848.28174 642.59171 846.43974 648.9417100000001 844.55074 658.5457100000001 840.1737400000001 697.4107100000001 822.46274 723.79271 782.0627400000001 723.79271 740.25774 723.79271 726.30974 724.3107100000001 725.68674 736.33271 725.18674 750.68071 724.58974 756.43971 723.7947399999999 765.54071 721.15774 812.93671 707.42274 845.83271 664.52274 845.97671 616.25774 846.01671 602.81574 844.87471 594.98874 841.16371 583.25774 838.42771 574.61274 832.0567100000001 561.13374 828.41071 556.27574 823.34371 549.5247400000001 823.88171 547.87174 832.65071 543.2597400000001 860.96271 528.3687400000001 882.17871 499.7407400000001 888.47171 467.94074000000006 890.67471 456.8077400000001 890.66771 435.12574000000006 888.45871 425.16474000000005 881.13571 392.13774000000006 860.84871 365.7357400000001 830.51771 349.75774000000007 823.4957099999999 346.05874000000006 822.96571 343.2737400000001 827.9137099999999 336.0817400000001 833.0497099999999 328.6167400000001 839.70971 313.59674000000007 842.4687099999999 303.25774000000007 844.8557099999998 294.3127400000001 845.1397099999999 291.46474000000006 845.1617099999999 276.25774000000007 845.1837099999999 260.9857400000001 844.9197099999999 258.2717400000001 842.5587099999999 249.55174000000008 837.3007099999999 230.13574000000008 827.5607099999999 213.5707400000001 813.4177099999999 199.99274000000008 793.34371 180.72174000000007 769.9387099999999 170.5707400000001 742.2927099999999 169.14674000000008 724.7257099999999 168.24074000000007 724.31471 167.9107400000001 723.3567099999999 153.94174000000007 722.5877099999999 142.73674000000005 720.3947099999999 129.43274000000008 718.1317099999999 122.25774000000007 706.1367099999999 84.22174000000007 674.9277099999999 55.40974000000007 637.3147099999999 47.645740000000075 626.4717099999999 45.407740000000075 606.8667099999999 45.185740000000074 595.7927099999998 47.17474000000008 584.8427099999998 49.14174000000008 573.6727099999998 53.154740000000075 561.9877099999999 59.31974000000008 556.3197099999999 62.31074000000008 550.7727099999998 64.75774000000008 549.6607099999999 64.75774000000008 546.9087099999999 64.75774000000008 543.3177099999999 60.699740000000084 536.7927099999998 50.21974000000009 530.1787099999998 39.595740000000085 516.3007099999999 25.254740000000087 506.04270999999983 18.44474000000009 496.3657099999998 12.019740000000088 482.10470999999984 5.388740000000089 472.29270999999983 2.752740000000088 460.61370999999986-0.3852599999999118 435.61370999999986-0.9572599999999118 423.79270999999983 1.642740000000088" fill-rule="nonzero"></path></svg>'},
+      biscuit:{name:'Biscuit',contentLayer:{version:'2.0.0',schema:'room-sign-content-layer',templateKey:'biscuit',displayUnit:'mm',content:{objects:[{id:1775654713555.3474,isText:false,type:'icon',typeKey:'online_1775654713555',assetKey:'online_1775654713555',name:'bow-tie-ribbon',path:'M 43.71 3.347 c 0.801 0.004 1.626 0.05 2.466 0.127 c -1.837 1.155 -4.633 2.482 -7.403 3.452 c -1.916 0.671 -3.831 1.195 -5.416 1.451 c -0.977 0.158 -1.805 0.175 -2.418 0.124 c 0.924 -1.625 2.819 -3.076 5.487 -4.018 c 1.971 -0.696 4.335 -1.109 6.943 -1.135 a 22.07 22.07 0 0 1 0.342 -0.001 Z m -37.419 0 a 22.07 22.07 0 0 1 0.342 0.001 c 2.608 0.026 4.971 0.439 6.943 1.135 c 2.668 0.942 4.563 2.394 5.487 4.018 c -0.613 0.051 -1.441 0.034 -2.418 -0.124 c -1.585 -0.256 -3.5 -0.78 -5.417 -1.451 c -2.771 -0.97 -5.566 -2.297 -7.403 -3.452 c 0.84 -0.078 1.665 -0.123 2.466 -0.127 Z m 40.804 1.709 c -1.048 6.19 -0.954 14.758 0.279 20.525 c -3.445 0.465 -7.211 -0.242 -10.335 -1.457 c -1.698 -0.66 -3.204 -1.463 -4.355 -2.269 c -0.418 -0.293 -0.783 -0.588 -1.094 -0.871 a 6.152 6.152 0 0 0 0.326 -0.347 c 1.45 -1.671 1.744 -4.064 1.37 -6.326 c -0.233 -1.412 -0.727 -2.799 -1.456 -3.98 c 2.44 0.043 5.325 -0.718 8.124 -1.749 c 2.695 -0.993 5.247 -2.247 7.142 -3.524 Z m -44.188 0 c 1.895 1.277 4.447 2.532 7.142 3.524 c 2.799 1.031 5.684 1.792 8.124 1.749 c -0.729 1.181 -1.223 2.568 -1.456 3.98 c -0.374 2.262 -0.079 4.655 1.37 6.326 a 6.152 6.152 0 0 0 0.326 0.347 c -0.311 0.284 -0.676 0.579 -1.094 0.871 c -1.151 0.806 -2.658 1.609 -4.355 2.269 c -3.125 1.215 -6.891 1.922 -10.335 1.457 C 3.861 19.814 3.954 11.247 2.906 5.056 Z M 25 8.467 c 1.583 0 3.147 0.484 4.112 1.321 c 1.177 1.021 2.123 2.902 2.438 4.81 c 0.315 1.908 0 3.777 -0.964 4.888 c -1.12 1.291 -3.332 2.058 -5.586 2.058 s -4.466 -0.766 -5.586 -2.058 c -0.963 -1.111 -1.279 -2.98 -0.964 -4.888 c 0.315 -1.908 1.261 -3.788 2.438 -4.81 c 0.965 -0.836 2.529 -1.321 4.112 -1.321 Z m 5.146 13.599 c 0.437 0.418 0.95 0.826 1.527 1.23 c 1.29 0.903 2.909 1.76 4.727 2.467 c 0.155 0.06 0.312 0.119 0.469 0.177 c 2.029 6.368 5.127 12.505 8.313 17.966 c -0.826 -0.185 -1.85 -0.465 -2.89 -0.843 c -2.076 -0.755 -4.327 -1.904 -5.734 -3.311 l -1.113 -1.113 l -0.363 1.532 c -0.739 3.113 -2.158 4.704 -3.685 6.483 c -3.449 -6.349 -5.002 -14.701 -5.399 -23.392 c 1.48 -0.117 2.929 -0.501 4.148 -1.195 z m -10.293 0 c 1.219 0.694 2.668 1.078 4.148 1.195 c -0.397 8.69 -1.95 17.043 -5.399 23.392 c -1.528 -1.778 -2.946 -3.369 -3.685 -6.482 l -0.363 -1.532 l -1.113 1.113 c -1.407 1.407 -3.658 2.556 -5.734 3.311 c -1.04 0.378 -2.064 0.658 -2.89 0.843 c 3.186 -5.461 6.284 -11.599 8.313 -17.966 q 0.237 -0.087 0.469 -0.177 c 1.818 -0.707 3.436 -1.564 4.727 -2.467 c 0.577 -0.404 1.09 -0.812 1.527 -1.23 z',x:39.3945,y:19.4439,scale:0.54257,iconWeight:54.26,rotation:-0.155892,rotationDeg:-8.93,flipX:false},{id:1775654765341.5007,isText:true,type:'text',typeKey:'text_1775654765341',assetKey:'text_1775654765341',name:'Charlotte\'s',path:'M 2.652 30.432 L 2.652 30.432 Q 1.696 30.432 1.111 29.954 Q 0.525 29.476 0.263 28.722 Q 0 27.968 0 27.147 L 0 27.147 Q 0 26.084 0.323 25.007 Q 0.646 23.93 1.205 22.954 Q 1.764 21.978 2.477 21.217 Q 3.191 20.456 3.978 20.019 Q 4.766 19.581 5.533 19.581 L 5.533 19.581 Q 6.085 19.581 6.428 19.844 Q 6.772 20.106 6.772 20.739 L 6.772 20.739 Q 6.772 21.13 6.637 21.621 Q 6.502 22.112 6.274 22.563 Q 6.045 23.014 5.769 23.31 Q 5.493 23.607 5.21 23.607 L 5.21 23.607 Q 5.102 23.607 4.988 23.539 Q 4.873 23.472 4.793 23.297 L 4.793 23.297 Q 4.995 23.068 5.244 22.725 Q 5.493 22.382 5.722 21.998 Q 5.95 21.614 6.092 21.244 Q 6.233 20.874 6.233 20.591 L 6.233 20.591 Q 6.233 20.322 6.078 20.153 Q 5.924 19.985 5.574 19.985 L 5.574 19.985 Q 4.995 19.985 4.369 20.456 Q 3.743 20.928 3.157 21.715 Q 2.571 22.503 2.1 23.472 Q 1.629 24.441 1.353 25.451 Q 1.077 26.461 1.077 27.376 L 1.077 27.376 Q 1.077 28.036 1.265 28.635 Q 1.454 29.234 1.878 29.604 Q 2.302 29.974 2.975 29.974 L 2.975 29.974 Q 3.689 29.974 4.396 29.571 Q 5.102 29.167 5.695 28.507 Q 6.287 27.847 6.637 27.08 L 6.637 27.08 L 6.826 27.215 Q 6.381 28.09 5.749 28.823 Q 5.116 29.557 4.335 29.995 Q 3.554 30.432 2.652 30.432 Z M 6.987 29.772 Q 6.731 29.772 6.583 29.342 Q 6.435 28.911 6.435 28.372 L 6.435 28.372 Q 6.435 27.726 6.651 26.838 Q 6.866 25.949 7.216 24.966 Q 7.566 23.984 8.004 23.041 Q 8.441 22.099 8.899 21.331 Q 9.356 20.564 9.76 20.106 Q 10.164 19.649 10.46 19.649 L 10.46 19.649 Q 10.703 19.649 10.804 19.938 Q 10.905 20.228 10.905 20.497 L 10.905 20.497 Q 10.905 20.874 10.736 21.412 Q 10.568 21.951 10.272 22.563 Q 9.976 23.176 9.585 23.768 Q 9.195 24.361 8.737 24.852 Q 8.279 25.343 7.808 25.626 L 7.808 25.626 Q 7.647 26.016 7.532 26.501 Q 7.418 26.986 7.364 27.45 Q 7.31 27.915 7.31 28.278 L 7.31 28.278 Q 7.31 28.426 7.317 28.534 Q 7.324 28.642 7.337 28.736 L 7.337 28.736 Q 7.526 28.184 7.748 27.666 Q 7.97 27.147 8.226 26.71 Q 8.481 26.272 8.771 25.942 Q 9.06 25.613 9.383 25.431 Q 9.707 25.249 10.07 25.249 L 10.07 25.249 Q 10.447 25.249 10.669 25.431 Q 10.891 25.613 10.992 25.889 Q 11.093 26.165 11.093 26.461 L 11.093 26.461 Q 11.093 26.878 10.952 27.268 Q 10.81 27.659 10.662 28.022 Q 10.514 28.386 10.514 28.722 L 10.514 28.722 Q 10.514 28.992 10.629 29.113 Q 10.743 29.234 10.918 29.234 L 10.918 29.234 Q 11.228 29.234 11.611 28.938 Q 11.995 28.642 12.372 28.15 Q 12.749 27.659 13.018 27.08 L 13.018 27.08 L 13.193 27.242 Q 12.911 27.901 12.507 28.433 Q 12.103 28.965 11.618 29.274 Q 11.134 29.584 10.609 29.584 L 10.609 29.584 Q 10.151 29.584 9.915 29.342 Q 9.68 29.099 9.68 28.736 L 9.68 28.736 Q 9.68 28.453 9.787 28.103 Q 9.895 27.753 9.996 27.39 Q 10.097 27.026 10.097 26.703 L 10.097 26.703 Q 10.097 26.353 9.949 26.205 Q 9.801 26.057 9.585 26.057 L 9.585 26.057 Q 9.249 26.057 8.98 26.326 Q 8.71 26.595 8.488 27.019 Q 8.266 27.443 8.071 27.915 Q 7.876 28.386 7.701 28.81 Q 7.526 29.234 7.351 29.503 Q 7.176 29.772 6.987 29.772 Z M 7.983 25.101 Q 8.36 24.805 8.717 24.347 Q 9.074 23.889 9.383 23.371 Q 9.693 22.853 9.935 22.355 Q 10.178 21.856 10.312 21.453 Q 10.447 21.049 10.447 20.847 L 10.447 20.847 Q 10.447 20.779 10.433 20.759 Q 10.42 20.739 10.393 20.739 L 10.393 20.739 Q 10.299 20.739 10.009 21.109 Q 9.72 21.48 9.343 22.099 Q 8.966 22.718 8.603 23.499 Q 8.239 24.28 7.983 25.101 Z',x:50.449,y:43.3543,scale:1.5,iconWeight:150,rotation:0,rotationDeg:0,flipX:false,text:'Charlotte\'s',fontPkg:'dancing-script',textWeight:0,textLetterSpacing:0,textContourGap:1.5,textFillPath:'M 2.652 30.432 L 2.652 30.432 Q 1.696 30.432 1.111 29.954 Q 0.525 29.476 0.263 28.722 Q 0 27.968 0 27.147 L 0 27.147 Q 0 26.084 0.323 25.007 Q 0.646 23.93 1.205 22.954 Q 1.764 21.978 2.477 21.217 Q 3.191 20.456 3.978 20.019 Q 4.766 19.581 5.533 19.581 L 5.533 19.581 Q 6.085 19.581 6.428 19.844 Q 6.772 20.106 6.772 20.739 L 6.772 20.739 Q 6.772 21.13 6.637 21.621 Q 6.502 22.112 6.274 22.563 Q 6.045 23.014 5.769 23.31 Q 5.493 23.607 5.21 23.607 L 5.21 23.607 Q 5.102 23.607 4.988 23.539 Q 4.873 23.472 4.793 23.297 L 4.793 23.297 Q 4.995 23.068 5.244 22.725 Q 5.493 22.382 5.722 21.998 Q 5.95 21.614 6.092 21.244 Q 6.233 20.874 6.233 20.591 L 6.233 20.591 Q 6.233 20.322 6.078 20.153 Q 5.924 19.985 5.574 19.985 L 5.574 19.985 Q 4.995 19.985 4.369 20.456 Q 3.743 20.928 3.157 21.715 Q 2.571 22.503 2.1 23.472 Q 1.629 24.441 1.353 25.451 Q 1.077 26.461 1.077 27.376 L 1.077 27.376 Q 1.077 28.036 1.265 28.635 Q 1.454 29.234 1.878 29.604 Q 2.302 29.974 2.975 29.974 L 2.975 29.974 Q 3.689 29.974 4.396 29.571 Q 5.102 29.167 5.695 28.507 Q 6.287 27.847 6.637 27.08 L 6.637 27.08 L 6.826 27.215 Q 6.381 28.09 5.749 28.823 Q 5.116 29.557 4.335 29.995 Q 3.554 30.432 2.652 30.432 Z M 6.987 29.772 Q 6.731 29.772 6.583 29.342 Q 6.435 28.911 6.435 28.372 L 6.435 28.372 Q 6.435 27.726 6.651 26.838 Q 6.866 25.949 7.216 24.966 Q 7.566 23.984 8.004 23.041 Q 8.441 22.099 8.899 21.331 Q 9.356 20.564 9.76 20.106 Q 10.164 19.649 10.46 19.649 L 10.46 19.649 Q 10.703 19.649 10.804 19.938 Q 10.905 20.228 10.905 20.497 L 10.905 20.497 Q 10.905 20.874 10.736 21.412 Q 10.568 21.951 10.272 22.563 Q 9.976 23.176 9.585 23.768 Q 9.195 24.361 8.737 24.852 Q 8.279 25.343 7.808 25.626 L 7.808 25.626 Q 7.647 26.016 7.532 26.501 Q 7.418 26.986 7.364 27.45 Q 7.31 27.915 7.31 28.278 L 7.31 28.278 Q 7.31 28.426 7.317 28.534 Q 7.324 28.642 7.337 28.736 L 7.337 28.736 Q 7.526 28.184 7.748 27.666 Q 7.97 27.147 8.226 26.71 Q 8.481 26.272 8.771 25.942 Q 9.06 25.613 9.383 25.431 Q 9.707 25.249 10.07 25.249 L 10.07 25.249 Q 10.447 25.249 10.669 25.431 Q 10.891 25.613 10.992 25.889 Q 11.093 26.165 11.093 26.461 L 11.093 26.461 Q 11.093 26.878 10.952 27.268 Q 10.81 27.659 10.662 28.022 Q 10.514 28.386 10.514 28.722 L 10.514 28.722 Q 10.514 28.992 10.629 29.113 Q 10.743 29.234 10.918 29.234 L 10.918 29.234 Q 11.228 29.234 11.611 28.938 Q 11.995 28.642 12.372 28.15 Q 12.749 27.659 13.018 27.08 L 13.018 27.08 L 13.193 27.242 Q 12.911 27.901 12.507 28.433 Q 12.103 28.965 11.618 29.274 Q 11.134 29.584 10.609 29.584 L 10.609 29.584 Q 10.151 29.584 9.915 29.342 Q 9.68 29.099 9.68 28.736 L 9.68 28.736 Q 9.68 28.453 9.787 28.103 Q 9.895 27.753 9.996 27.39 Q 10.097 27.026 10.097 26.703 L 10.097 26.703 Q 10.097 26.353 9.949 26.205 Q 9.801 26.057 9.585 26.057 L 9.585 26.057 Q 9.249 26.057 8.98 26.326 Q 8.71 26.595 8.488 27.019 Q 8.266 27.443 8.071 27.915 Q 7.876 28.386 7.701 28.81 Q 7.526 29.234 7.351 29.503 Q 7.176 29.772 6.987 29.772 Z M 7.983 25.101 Q 8.36 24.805 8.717 24.347 Q 9.074 23.889 9.383 23.371 Q 9.693 22.853 9.935 22.355 Q 10.178 21.856 10.312 21.453 Q 10.447 21.049 10.447 20.847 L 10.447 20.847 Q 10.447 20.779 10.433 20.759 Q 10.42 20.739 10.393 20.739 L 10.393 20.739 Q 10.299 20.739 10.009 21.109 Q 9.72 21.48 9.343 22.099 Q 8.966 22.718 8.603 23.499 Q 8.239 24.28 7.983 25.101 Z',textOuterContourPath:'M 2.652 30.432 L 2.652 30.432 Q 1.696 30.432 1.111 29.954 Q 0.525 29.476 0.263 28.722 Q 0 27.968 0 27.147 L 0 27.147 Q 0 26.084 0.323 25.007 Q 0.646 23.93 1.205 22.954 Q 1.764 21.978 2.477 21.217 Q 3.191 20.456 3.978 20.019 Q 4.766 19.581 5.533 19.581 L 5.533 19.581 Q 6.085 19.581 6.428 19.844 Q 6.772 20.106 6.772 20.739 L 6.772 20.739 Q 6.772 21.13 6.637 21.621 Q 6.502 22.112 6.274 22.563 Q 6.045 23.014 5.769 23.31 Q 5.493 23.607 5.21 23.607 L 5.21 23.607 Q 5.102 23.607 4.988 23.539 Q 4.873 23.472 4.793 23.297 L 4.793 23.297 Q 4.995 23.068 5.244 22.725 Q 5.493 22.382 5.722 21.998 Q 5.95 21.614 6.092 21.244 Q 6.233 20.874 6.233 20.591 L 6.233 20.591 Q 6.233 20.322 6.078 20.153 Q 5.924 19.985 5.574 19.985 L 5.574 19.985 Q 4.995 19.985 4.369 20.456 Q 3.743 20.928 3.157 21.715 Q 2.571 22.503 2.1 23.472 Q 1.629 24.441 1.353 25.451 Q 1.077 26.461 1.077 27.376 L 1.077 27.376 Q 1.077 28.036 1.265 28.635 Q 1.454 29.234 1.878 29.604 Q 2.302 29.974 2.975 29.974 L 2.975 29.974 Q 3.689 29.974 4.396 29.571 Q 5.102 29.167 5.695 28.507 Q 6.287 27.847 6.637 27.08 L 6.637 27.08 L 6.826 27.215 Q 6.381 28.09 5.749 28.823 Q 5.116 29.557 4.335 29.995 Q 3.554 30.432 2.652 30.432 Z M 6.987 29.772 Q 6.731 29.772 6.583 29.342 Q 6.435 28.911 6.435 28.372 L 6.435 28.372 Q 6.435 27.726 6.651 26.838 Q 6.866 25.949 7.216 24.966 Q 7.566 23.984 8.004 23.041 Q 8.441 22.099 8.899 21.331 Q 9.356 20.564 9.76 20.106 Q 10.164 19.649 10.46 19.649 L 10.46 19.649 Q 10.703 19.649 10.804 19.938 Q 10.905 20.228 10.905 20.497 L 10.905 20.497 Q 10.905 20.874 10.736 21.412 Q 10.568 21.951 10.272 22.563 Q 9.976 23.176 9.585 23.768 Q 9.195 24.361 8.737 24.852 Q 8.279 25.343 7.808 25.626 L 7.808 25.626 Q 7.647 26.016 7.532 26.501 Q 7.418 26.986 7.364 27.45 Q 7.31 27.915 7.31 28.278 L 7.31 28.278 Q 7.31 28.426 7.317 28.534 Q 7.324 28.642 7.337 28.736 L 7.337 28.736 Q 7.526 28.184 7.748 27.666 Q 7.97 27.147 8.226 26.71 Q 8.481 26.272 8.771 25.942 Q 9.06 25.613 9.383 25.431 Q 9.707 25.249 10.07 25.249 L 10.07 25.249 Q 10.447 25.249 10.669 25.431 Q 10.891 25.613 10.992 25.889 Q 11.093 26.165 11.093 26.461 L 11.093 26.461 Q 11.093 26.878 10.952 27.268 Q 10.81 27.659 10.662 28.022 Q 10.514 28.386 10.514 28.722 L 10.514 28.722 Q 10.514 28.992 10.629 29.113 Q 10.743 29.234 10.918 29.234 L 10.918 29.234 Q 11.228 29.234 11.611 28.938 Q 11.995 28.642 12.372 28.15 Q 12.749 27.659 13.018 27.08 L 13.018 27.08 L 13.193 27.242 Q 12.911 27.901 12.507 28.433 Q 12.103 28.965 11.618 29.274 Q 11.134 29.584 10.609 29.584 L 10.609 29.584 Q 10.151 29.584 9.915 29.342 Q 9.68 29.099 9.68 28.736 L 9.68 28.736 Q 9.68 28.453 9.787 28.103 Q 9.895 27.753 9.996 27.39 Q 10.097 27.026 10.097 26.703 L 10.097 26.703 Q 10.097 26.353 9.949 26.205 Q 9.801 26.057 9.585 26.057 L 9.585 26.057 Q 9.249 26.057 8.98 26.326 Q 8.71 26.595 8.488 27.019 Q 8.266 27.443 8.071 27.915 Q 7.876 28.386 7.701 28.81 Q 7.526 29.234 7.351 29.503 Q 7.176 29.772 6.987 29.772 Z M 13.409 29.894 Q 12.991 29.894 12.702 29.618 Q 12.412 29.342 12.412 28.776 L 12.412 28.776 Q 12.412 28.292 12.628 27.733 Q 12.843 27.174 13.22 26.629 Q 13.597 26.084 14.075 25.633 Q 14.553 25.182 15.085 24.912 Q 15.617 24.643 16.142 24.643 L 16.142 24.643 Q 16.667 24.643 17.017 24.919 Q 17.367 25.195 17.367 25.653 L 17.367 25.653 Q 17.367 25.989 17.185 26.111 Q 17.003 26.232 16.707 26.232 L 16.707 26.232 Q 16.734 26.124 16.754 25.996 Q 16.774 25.868 16.774 25.761 L 16.774 25.761 Q 16.774 25.451 16.626 25.229 Q 16.478 25.007 16.115 25.007 L 16.115 25.007 Q 15.738 25.007 15.347 25.269 Q 14.957 25.532 14.593 25.969 Q 14.23 26.407 13.947 26.918 Q 13.665 27.43 13.503 27.928 Q 13.341 28.426 13.341 28.817 L 13.341 28.817 Q 13.341 29.342 13.705 29.342 L 13.705 29.342 Q 14.015 29.342 14.378 29.052 Q 14.742 28.763 15.125 28.312 Q 15.509 27.861 15.859 27.376 Q 16.209 26.891 16.478 26.488 L 16.478 26.488 Q 16.532 26.407 16.546 26.407 L 16.546 26.407 Q 16.626 26.42 16.754 26.461 Q 16.882 26.501 16.976 26.568 Q 17.071 26.636 17.071 26.743 L 17.071 26.743 Q 17.071 26.865 16.949 27.073 Q 16.828 27.282 16.68 27.551 Q 16.532 27.82 16.411 28.096 Q 16.29 28.372 16.29 28.615 L 16.29 28.615 Q 16.29 28.817 16.397 29.012 Q 16.505 29.207 16.747 29.207 L 16.747 29.207 Q 17.111 29.207 17.703 28.675 Q 18.296 28.144 18.901 27.08 L 18.901 27.08 L 19.036 27.215 Q 18.753 27.942 18.309 28.494 Q 17.865 29.046 17.36 29.355 Q 16.855 29.665 16.37 29.665 L 16.37 29.665 Q 15.872 29.665 15.637 29.369 Q 15.401 29.072 15.401 28.722 L 15.401 28.722 Q 15.401 28.642 15.415 28.541 Q 15.428 28.44 15.442 28.332 L 15.442 28.332 Q 14.863 29.113 14.385 29.503 Q 13.907 29.894 13.409 29.894 Z M 20.961 29.611 Q 20.504 29.611 20.241 29.369 Q 19.978 29.126 19.978 28.736 L 19.978 28.736 Q 19.978 28.332 20.167 27.888 Q 20.355 27.443 20.537 27.006 Q 20.719 26.568 20.719 26.218 L 20.719 26.218 Q 20.719 25.788 20.47 25.579 Q 20.221 25.37 19.965 25.195 L 19.965 25.195 Q 19.655 25.989 19.319 26.703 Q 18.982 27.417 18.767 27.78 L 18.767 27.78 L 18.646 27.551 Q 18.834 27.201 19.137 26.528 Q 19.44 25.855 19.736 24.993 L 19.736 24.993 Q 19.602 24.859 19.602 24.67 L 19.602 24.67 Q 19.602 24.266 19.83 24.011 Q 20.059 23.755 20.167 23.755 L 20.167 23.755 Q 20.315 23.755 20.335 23.883 Q 20.355 24.011 20.355 24.078 L 20.355 24.078 Q 20.355 24.145 20.281 24.34 Q 20.207 24.536 20.207 24.576 L 20.207 24.576 Q 20.207 24.764 20.416 24.919 Q 20.625 25.074 20.894 25.269 Q 21.163 25.464 21.372 25.74 Q 21.581 26.016 21.581 26.447 L 21.581 26.447 Q 21.581 26.851 21.412 27.268 Q 21.244 27.686 21.076 28.063 Q 20.907 28.44 20.907 28.722 L 20.907 28.722 Q 20.907 28.965 21.029 29.046 Q 21.15 29.126 21.311 29.126 L 21.311 29.126 Q 21.634 29.126 21.978 28.924 Q 22.321 28.722 22.644 28.413 Q 22.967 28.103 23.223 27.76 Q 23.479 27.417 23.6 27.12 L 23.6 27.12 L 23.775 27.255 Q 23.519 27.82 23.075 28.366 Q 22.631 28.911 22.085 29.261 Q 21.54 29.611 20.961 29.611 Z M 24.435 29.665 Q 23.856 29.665 23.607 29.268 Q 23.358 28.87 23.358 28.278 L 23.358 28.278 Q 23.358 27.632 23.6 26.743 Q 23.842 25.855 24.239 24.872 Q 24.637 23.889 25.108 22.954 Q 25.579 22.018 26.05 21.251 Q 26.521 20.483 26.918 20.026 Q 27.316 19.568 27.544 19.568 L 27.544 19.568 Q 27.693 19.568 27.787 19.736 Q 27.881 19.904 27.935 20.14 Q 27.989 20.376 27.989 20.564 L 27.989 20.564 Q 27.989 20.928 27.807 21.513 Q 27.625 22.099 27.295 22.819 Q 26.966 23.539 26.515 24.273 Q 26.064 25.007 25.532 25.68 Q 25 26.353 24.408 26.838 L 24.408 26.838 Q 24.327 27.201 24.28 27.544 Q 24.233 27.888 24.233 28.197 L 24.233 28.197 Q 24.233 28.722 24.381 28.978 Q 24.529 29.234 24.825 29.234 L 24.825 29.234 Q 25.188 29.234 25.545 28.911 Q 25.902 28.588 26.218 28.096 Q 26.535 27.605 26.764 27.08 L 26.764 27.08 L 26.966 27.188 Q 26.427 28.332 25.794 28.998 Q 25.162 29.665 24.435 29.665 Z M 27.423 29.692 Q 26.844 29.692 26.602 29.335 Q 26.36 28.978 26.36 28.467 L 26.36 28.467 Q 26.36 28.049 26.494 27.605 Q 26.629 27.161 26.851 26.77 Q 27.073 26.38 27.349 26.138 Q 27.625 25.895 27.908 25.895 L 27.908 25.895 Q 27.975 25.895 28.049 25.915 Q 28.123 25.936 28.191 25.963 L 28.191 25.963 Q 28.069 26.07 27.901 26.36 Q 27.733 26.649 27.585 27.019 Q 27.437 27.39 27.336 27.753 Q 27.235 28.117 27.235 28.372 L 27.235 28.372 Q 27.235 28.776 27.369 28.958 Q 27.504 29.14 27.719 29.14 L 27.719 29.14 Q 28.002 29.14 28.393 28.837 Q 28.783 28.534 29.16 28.063 L 29.16 28.063 Q 28.783 27.753 28.574 27.248 Q 28.366 26.743 28.366 26.218 L 28.366 26.218 Q 28.366 25.774 28.52 25.384 Q 28.675 24.993 28.971 24.758 Q 29.268 24.522 29.685 24.522 L 29.685 24.522 Q 30.237 24.522 30.425 24.818 Q 30.614 25.114 30.614 25.559 L 30.614 25.559 Q 30.614 26.084 30.358 26.723 Q 30.102 27.363 29.712 27.955 L 29.712 27.955 Q 29.954 28.09 30.223 28.09 L 30.223 28.09 Q 30.439 28.09 30.708 28.002 Q 30.977 27.915 31.24 27.699 Q 31.502 27.484 31.664 27.12 L 31.664 27.12 L 31.826 27.255 Q 31.556 27.888 31.065 28.15 Q 30.574 28.413 30.129 28.413 L 30.129 28.413 Q 29.954 28.413 29.793 28.379 Q 29.631 28.345 29.483 28.278 L 29.483 28.278 Q 29.025 28.884 28.48 29.288 Q 27.935 29.692 27.423 29.692 Z M 32.553 29.88 Q 31.974 29.88 31.664 29.544 Q 31.354 29.207 31.354 28.547 L 31.354 28.547 Q 31.354 27.955 31.576 27.087 Q 31.799 26.218 32.135 25.303 L 32.135 25.303 Q 32.001 25.276 31.879 25.256 Q 31.758 25.236 31.651 25.195 L 31.651 25.195 L 31.651 24.953 Q 31.758 24.966 31.906 24.98 Q 32.054 24.993 32.243 25.007 L 32.243 25.007 Q 32.526 24.28 32.849 23.6 Q 33.172 22.92 33.488 22.388 Q 33.805 21.856 34.094 21.54 Q 34.383 21.224 34.585 21.224 L 34.585 21.224 Q 34.693 21.224 34.781 21.298 Q 34.868 21.372 34.868 21.52 L 34.868 21.52 Q 34.868 21.749 34.585 22.267 Q 34.303 22.785 33.885 23.499 Q 33.468 24.212 33.078 25.047 L 33.078 25.047 L 33.576 25.047 Q 34.02 25.047 34.511 25.034 Q 35.003 25.02 35.501 24.966 L 35.501 24.966 L 35.501 25.209 Q 34.76 25.289 34.175 25.33 Q 33.589 25.37 33.131 25.37 L 33.131 25.37 L 32.929 25.37 Q 32.62 26.084 32.404 26.838 Q 32.189 27.592 32.189 28.305 L 32.189 28.305 Q 32.189 28.884 32.364 29.133 Q 32.539 29.382 32.943 29.382 L 32.943 29.382 Q 33.643 29.382 34.316 28.763 Q 34.989 28.144 35.501 27.08 L 35.501 27.08 L 35.676 27.215 Q 35.353 27.968 34.861 28.574 Q 34.37 29.18 33.778 29.53 Q 33.185 29.88 32.553 29.88 Z M 36.389 29.88 Q 35.81 29.88 35.501 29.544 Q 35.191 29.207 35.191 28.547 L 35.191 28.547 Q 35.191 27.955 35.413 27.087 Q 35.635 26.218 35.972 25.303 L 35.972 25.303 Q 35.837 25.276 35.716 25.256 Q 35.595 25.236 35.487 25.195 L 35.487 25.195 L 35.487 24.953 Q 35.595 24.966 35.743 24.98 Q 35.891 24.993 36.08 25.007 L 36.08 25.007 Q 36.362 24.28 36.686 23.6 Q 37.009 22.92 37.325 22.388 Q 37.641 21.856 37.931 21.54 Q 38.22 21.224 38.422 21.224 L 38.422 21.224 Q 38.53 21.224 38.617 21.298 Q 38.705 21.372 38.705 21.52 L 38.705 21.52 Q 38.705 21.749 38.422 22.267 Q 38.139 22.785 37.722 23.499 Q 37.305 24.212 36.914 25.047 L 36.914 25.047 L 37.412 25.047 Q 37.857 25.047 38.348 25.034 Q 38.84 25.02 39.338 24.966 L 39.338 24.966 L 39.338 25.209 Q 38.597 25.289 38.012 25.33 Q 37.426 25.37 36.968 25.37 L 36.968 25.37 L 36.766 25.37 Q 36.457 26.084 36.241 26.838 Q 36.026 27.592 36.026 28.305 L 36.026 28.305 Q 36.026 28.884 36.201 29.133 Q 36.376 29.382 36.78 29.382 L 36.78 29.382 Q 37.48 29.382 38.153 28.763 Q 38.826 28.144 39.338 27.08 L 39.338 27.08 L 39.513 27.215 Q 39.19 27.968 38.698 28.574 Q 38.207 29.18 37.614 29.53 Q 37.022 29.88 36.389 29.88 Z M 40.536 29.853 Q 39.715 29.853 39.304 29.402 Q 38.893 28.951 38.893 28.292 L 38.893 28.292 Q 38.893 27.686 39.196 27.013 Q 39.499 26.34 40.004 25.747 Q 40.509 25.155 41.115 24.785 Q 41.721 24.414 42.313 24.414 L 42.313 24.414 Q 42.623 24.414 42.885 24.576 Q 43.148 24.737 43.148 25.236 L 43.148 25.236 Q 43.148 25.747 42.845 26.198 Q 42.542 26.649 42.05 26.999 Q 41.559 27.349 40.973 27.571 Q 40.388 27.793 39.809 27.847 L 39.809 27.847 Q 39.782 27.982 39.768 28.103 Q 39.755 28.224 39.755 28.332 L 39.755 28.332 Q 39.755 28.534 39.802 28.736 Q 39.849 28.938 39.97 29.106 Q 40.092 29.274 40.3 29.369 Q 40.509 29.463 40.819 29.463 L 40.819 29.463 Q 41.397 29.463 41.963 29.133 Q 42.528 28.803 43.013 28.265 Q 43.498 27.726 43.834 27.08 L 43.834 27.08 L 43.996 27.201 Q 43.632 28.009 43.074 28.601 Q 42.515 29.194 41.862 29.523 Q 41.209 29.853 40.536 29.853 Z M 45.557 21.506 Q 45.436 21.439 45.382 21.305 Q 45.328 21.17 45.328 21.008 L 45.328 21.008 Q 45.328 20.726 45.45 20.389 Q 45.571 20.053 45.759 19.81 Q 45.948 19.568 46.15 19.568 L 46.15 19.568 Q 46.284 19.568 46.385 19.682 Q 46.486 19.797 46.486 19.945 L 46.486 19.945 Q 46.109 20.335 45.901 20.746 Q 45.692 21.156 45.557 21.506 Z M 46.392 29.947 Q 45.759 29.947 45.389 29.672 Q 45.019 29.396 44.864 28.992 Q 44.709 28.588 44.709 28.184 L 44.709 28.184 Q 44.709 27.78 44.817 27.565 Q 44.925 27.349 45.079 27.242 Q 45.234 27.134 45.376 27.08 Q 45.517 27.026 45.571 26.972 L 45.571 26.972 Q 45.975 26.528 46.311 26.043 Q 46.648 25.559 46.904 25.02 L 46.904 25.02 L 46.904 24.859 Q 46.904 24.361 47.072 24.152 Q 47.24 23.943 47.429 23.943 L 47.429 23.943 Q 47.536 23.943 47.59 23.997 Q 47.644 24.051 47.644 24.118 L 47.644 24.118 Q 47.644 24.186 47.604 24.334 Q 47.563 24.482 47.563 24.711 L 47.563 24.711 Q 47.563 25.155 47.738 25.673 Q 47.913 26.191 48.088 26.764 Q 48.263 27.336 48.263 27.955 L 48.263 27.955 Q 48.263 28.13 48.243 28.298 Q 48.223 28.467 48.183 28.615 L 48.183 28.615 Q 48.654 28.534 49.071 28.191 Q 49.488 27.847 49.879 27.093 L 49.879 27.093 L 50 27.228 Q 49.744 27.968 49.233 28.352 Q 48.721 28.736 48.115 28.83 L 48.115 28.83 Q 47.9 29.409 47.435 29.678 Q 46.971 29.947 46.392 29.947 Z'},{id:1775654794246.2202,isText:true,type:'text',typeKey:'text_1775654794246',assetKey:'text_1775654794246',name:'bedroom',path:'M 0 31.179 L 0 18.821 L 2.931 18.821 Q 4.431 18.821 5.12 19.518 Q 5.809 20.215 5.809 21.663 L 5.809 21.663 L 5.809 22.157 Q 5.809 23.111 5.5 23.711 Q 5.191 24.311 4.555 24.576 L 4.555 24.576 L 4.555 24.612 Q 6.003 25.106 6.003 27.189 L 6.003 27.189 L 6.003 28.249 Q 6.003 29.679 5.252 30.429 Q 4.502 31.179 3.054 31.179 L 3.054 31.179 L 0 31.179 Z M 1.942 23.852 L 2.701 23.852 Q 3.284 23.852 3.575 23.552 Q 3.867 23.252 3.867 22.546 L 3.867 22.546 L 3.867 21.857 Q 3.867 21.186 3.628 20.886 Q 3.39 20.586 2.878 20.586 L 2.878 20.586 L 1.942 20.586 L 1.942 23.852 Z M 1.942 29.414 L 3.054 29.414 Q 3.566 29.414 3.814 29.14 Q 4.061 28.867 4.061 28.196 L 4.061 28.196 L 4.061 27.119 Q 4.061 26.271 3.769 25.945 Q 3.478 25.618 2.807 25.618 L 2.807 25.618 L 1.942 25.618 L 1.942 29.414 Z M 7.133 31.179 L 7.133 18.821 L 12.429 18.821 L 12.429 20.586 L 9.075 20.586 L 9.075 23.852 L 11.741 23.852 L 11.741 25.618 L 9.075 25.618 L 9.075 29.414 L 12.429 29.414 L 12.429 31.179 L 7.133 31.179 Z M 13.542 31.179 L 13.542 18.821 L 16.508 18.821 Q 17.956 18.821 18.679 19.597 Q 19.403 20.374 19.403 21.875 L 19.403 21.875 L 19.403 28.125 Q 19.403 29.626 18.679 30.403 Q 17.956 31.179 16.508 31.179 L 16.508 31.179 L 13.542 31.179 Z M 15.484 29.414 L 16.472 29.414 Q 16.949 29.414 17.205 29.131 Q 17.461 28.849 17.461 28.213 L 17.461 28.213 L 17.461 21.787 Q 17.461 21.151 17.205 20.869 Q 16.949 20.586 16.472 20.586 L 16.472 20.586 L 15.484 20.586 L 15.484 29.414 Z M 20.71 31.179 L 20.71 18.821 L 23.588 18.821 Q 25.088 18.821 25.777 19.518 Q 26.465 20.215 26.465 21.663 L 26.465 21.663 L 26.465 22.422 Q 26.465 24.347 25.194 24.859 L 25.194 24.859 L 25.194 24.894 Q 25.9 25.106 26.192 25.759 Q 26.483 26.412 26.483 27.507 L 26.483 27.507 L 26.483 29.679 Q 26.483 30.208 26.518 30.535 Q 26.554 30.862 26.695 31.179 L 26.695 31.179 L 24.718 31.179 Q 24.612 30.879 24.576 30.614 Q 24.541 30.35 24.541 29.661 L 24.541 29.661 L 24.541 27.401 Q 24.541 26.554 24.267 26.218 Q 23.994 25.883 23.323 25.883 L 23.323 25.883 L 22.652 25.883 L 22.652 31.179 L 20.71 31.179 Z M 22.652 24.117 L 23.358 24.117 Q 23.941 24.117 24.232 23.817 Q 24.523 23.517 24.523 22.811 L 24.523 22.811 L 24.523 21.857 Q 24.523 21.186 24.285 20.886 Q 24.047 20.586 23.535 20.586 L 23.535 20.586 L 22.652 20.586 L 22.652 24.117 Z M 30.632 31.356 Q 29.202 31.356 28.443 30.544 Q 27.684 29.732 27.684 28.249 L 27.684 28.249 L 27.684 21.751 Q 27.684 20.268 28.443 19.456 Q 29.202 18.644 30.632 18.644 L 30.632 18.644 Q 32.062 18.644 32.821 19.456 Q 33.581 20.268 33.581 21.751 L 33.581 21.751 L 33.581 28.249 Q 33.581 29.732 32.821 30.544 Q 32.062 31.356 30.632 31.356 L 30.632 31.356 Z M 30.632 29.59 Q 31.638 29.59 31.638 28.372 L 31.638 28.372 L 31.638 21.628 Q 31.638 20.41 30.632 20.41 L 30.632 20.41 Q 29.626 20.41 29.626 21.628 L 29.626 21.628 L 29.626 28.372 Q 29.626 29.59 30.632 29.59 L 30.632 29.59 Z M 37.694 31.356 Q 36.264 31.356 35.505 30.544 Q 34.746 29.732 34.746 28.249 L 34.746 28.249 L 34.746 21.751 Q 34.746 20.268 35.505 19.456 Q 36.264 18.644 37.694 18.644 L 37.694 18.644 Q 39.124 18.644 39.883 19.456 Q 40.643 20.268 40.643 21.751 L 40.643 21.751 L 40.643 28.249 Q 40.643 29.732 39.883 30.544 Q 39.124 31.356 37.694 31.356 L 37.694 31.356 Z M 37.694 29.59 Q 38.701 29.59 38.701 28.372 L 38.701 28.372 L 38.701 21.628 Q 38.701 20.41 37.694 20.41 L 37.694 20.41 Q 36.688 20.41 36.688 21.628 L 36.688 21.628 L 36.688 28.372 Q 36.688 29.59 37.694 29.59 L 37.694 29.59 Z M 41.949 31.179 L 41.949 18.821 L 44.721 18.821 L 45.957 27.666 L 45.992 27.666 L 47.228 18.821 L 50 18.821 L 50 31.179 L 48.164 31.179 L 48.164 21.822 L 48.129 21.822 L 46.716 31.179 L 45.092 31.179 L 43.679 21.822 L 43.644 21.822 L 43.644 31.179 L 41.949 31.179 Z',textOuterContourPath:'M 0 31.179 L 0 18.821 L 2.931 18.821 Q 4.431 18.821 5.12 19.518 Q 5.809 20.215 5.809 21.663 L 5.809 21.663 L 5.809 22.157 Q 5.809 23.111 5.5 23.711 Q 5.191 24.311 4.555 24.576 L 4.555 24.576 L 4.555 24.612 Q 6.003 25.106 6.003 27.189 L 6.003 27.189 L 6.003 28.249 Q 6.003 29.679 5.252 30.429 Q 4.502 31.179 3.054 31.179 L 3.054 31.179 L 0 31.179 Z M 7.133 31.179 L 7.133 18.821 L 12.429 18.821 L 12.429 20.586 L 9.075 20.586 L 9.075 23.852 L 11.741 23.852 L 11.741 25.618 L 9.075 25.618 L 9.075 29.414 L 12.429 29.414 L 12.429 31.179 L 7.133 31.179 Z M 13.542 31.179 L 13.542 18.821 L 16.508 18.821 Q 17.956 18.821 18.679 19.597 Q 19.403 20.374 19.403 21.875 L 19.403 21.875 L 19.403 28.125 Q 19.403 29.626 18.679 30.403 Q 17.956 31.179 16.508 31.179 L 16.508 31.179 L 13.542 31.179 Z M 20.71 31.179 L 20.71 18.821 L 23.588 18.821 Q 25.088 18.821 25.777 19.518 Q 26.465 20.215 26.465 21.663 L 26.465 21.663 L 26.465 22.422 Q 26.465 24.347 25.194 24.859 L 25.194 24.859 L 25.194 24.894 Q 25.9 25.106 26.192 25.759 Q 26.483 26.412 26.483 27.507 L 26.483 27.507 L 26.483 29.679 Q 26.483 30.208 26.518 30.535 Q 26.554 30.862 26.695 31.179 L 26.695 31.179 L 24.718 31.179 Q 24.612 30.879 24.576 30.614 Q 24.541 30.35 24.541 29.661 L 24.541 29.661 L 24.541 27.401 Q 24.541 26.554 24.267 26.218 Q 23.994 25.883 23.323 25.883 L 23.323 25.883 L 22.652 25.883 L 22.652 31.179 L 20.71 31.179 Z M 30.632 31.356 Q 29.202 31.356 28.443 30.544 Q 27.684 29.732 27.684 28.249 L 27.684 28.249 L 27.684 21.751 Q 27.684 20.268 28.443 19.456 Q 29.202 18.644 30.632 18.644 L 30.632 18.644 Q 32.062 18.644 32.821 19.456 Q 33.581 20.268 33.581 21.751 L 33.581 21.751 L 33.581 28.249 Q 33.581 29.732 32.821 30.544 Q 32.062 31.356 30.632 31.356 L 30.632 31.356 Z M 37.694 31.356 Q 36.264 31.356 35.505 30.544 Q 34.746 29.732 34.746 28.249 L 34.746 28.249 L 34.746 21.751 Q 34.746 20.268 35.505 19.456 Q 36.264 18.644 37.694 18.644 L 37.694 18.644 Q 39.124 18.644 39.883 19.456 Q 40.643 20.268 40.643 21.751 L 40.643 21.751 L 40.643 28.249 Q 40.643 29.732 39.883 30.544 Q 39.124 31.356 37.694 31.356 L 37.694 31.356 Z M 41.949 31.179 L 41.949 18.821 L 44.721 18.821 L 45.957 27.666 L 45.992 27.666 L 47.228 18.821 L 50 18.821 L 50 31.179 L 48.164 31.179 L 48.164 21.822 L 48.129 21.822 L 46.716 31.179 L 45.092 31.179 L 43.679 21.822 L 43.644 21.822 L 43.644 31.179 L 41.949 31.179 Z',x:53.2201,y:61.8996,scale:0.863752,iconWeight:86.38,rotation:0,rotationDeg:0,flipX:false,text:'bedroom',fontPkg:'bebas-neue',textWeight:0,textLetterSpacing:0,textContourGap:1.5,textFillPath:'M 0 31.179 L 0 18.821 L 2.931 18.821 Q 4.431 18.821 5.12 19.518 Q 5.809 20.215 5.809 21.663 L 5.809 21.663 L 5.809 22.157 Q 5.809 23.111 5.5 23.711 Q 5.191 24.311 4.555 24.576 L 4.555 24.576 L 4.555 24.612 Q 6.003 25.106 6.003 27.189 L 6.003 27.189 L 6.003 28.249 Q 6.003 29.679 5.252 30.429 Q 4.502 31.179 3.054 31.179 L 3.054 31.179 L 0 31.179 Z M 1.942 23.852 L 2.701 23.852 Q 3.284 23.852 3.575 23.552 Q 3.867 23.252 3.867 22.546 L 3.867 22.546 L 3.867 21.857 Q 3.867 21.186 3.628 20.886 Q 3.39 20.586 2.878 20.586 L 2.878 20.586 L 1.942 20.586 L 1.942 23.852 Z M 1.942 29.414 L 3.054 29.414 Q 3.566 29.414 3.814 29.14 Q 4.061 28.867 4.061 28.196 L 4.061 28.196 L 4.061 27.119 Q 4.061 26.271 3.769 25.945 Q 3.478 25.618 2.807 25.618 L 2.807 25.618 L 1.942 25.618 L 1.942 29.414 Z M 7.133 31.179 L 7.133 18.821 L 12.429 18.821 L 12.429 20.586 L 9.075 20.586 L 9.075 23.852 L 11.741 23.852 L 11.741 25.618 L 9.075 25.618 L 9.075 29.414 L 12.429 29.414 L 12.429 31.179 L 7.133 31.179 Z M 13.542 31.179 L 13.542 18.821 L 16.508 18.821 Q 17.956 18.821 18.679 19.597 Q 19.403 20.374 19.403 21.875 L 19.403 21.875 L 19.403 28.125 Q 19.403 29.626 18.679 30.403 Q 17.956 31.179 16.508 31.179 L 16.508 31.179 L 13.542 31.179 Z M 15.484 29.414 L 16.472 29.414 Q 16.949 29.414 17.205 29.131 Q 17.461 28.849 17.461 28.213 L 17.461 28.213 L 17.461 21.787 Q 17.461 21.151 17.205 20.869 Q 16.949 20.586 16.472 20.586 L 16.472 20.586 L 15.484 20.586 L 15.484 29.414 Z M 20.71 31.179 L 20.71 18.821 L 23.588 18.821 Q 25.088 18.821 25.777 19.518 Q 26.465 20.215 26.465 21.663 L 26.465 21.663 L 26.465 22.422 Q 26.465 24.347 25.194 24.859 L 25.194 24.859 L 25.194 24.894 Q 25.9 25.106 26.192 25.759 Q 26.483 26.412 26.483 27.507 L 26.483 27.507 L 26.483 29.679 Q 26.483 30.208 26.518 30.535 Q 26.554 30.862 26.695 31.179 L 26.695 31.179 L 24.718 31.179 Q 24.612 30.879 24.576 30.614 Q 24.541 30.35 24.541 29.661 L 24.541 29.661 L 24.541 27.401 Q 24.541 26.554 24.267 26.218 Q 23.994 25.883 23.323 25.883 L 23.323 25.883 L 22.652 25.883 L 22.652 31.179 L 20.71 31.179 Z M 22.652 24.117 L 23.358 24.117 Q 23.941 24.117 24.232 23.817 Q 24.523 23.517 24.523 22.811 L 24.523 22.811 L 24.523 21.857 Q 24.523 21.186 24.285 20.886 Q 24.047 20.586 23.535 20.586 L 23.535 20.586 L 22.652 20.586 L 22.652 24.117 Z M 30.632 31.356 Q 29.202 31.356 28.443 30.544 Q 27.684 29.732 27.684 28.249 L 27.684 28.249 L 27.684 21.751 Q 27.684 20.268 28.443 19.456 Q 29.202 18.644 30.632 18.644 L 30.632 18.644 Q 32.062 18.644 32.821 19.456 Q 33.581 20.268 33.581 21.751 L 33.581 21.751 L 33.581 28.249 Q 33.581 29.732 32.821 30.544 Q 32.062 31.356 30.632 31.356 L 30.632 31.356 Z M 30.632 29.59 Q 31.638 29.59 31.638 28.372 L 31.638 28.372 L 31.638 21.628 Q 31.638 20.41 30.632 20.41 L 30.632 20.41 Q 29.626 20.41 29.626 21.628 L 29.626 21.628 L 29.626 28.372 Q 29.626 29.59 30.632 29.59 L 30.632 29.59 Z M 37.694 31.356 Q 36.264 31.356 35.505 30.544 Q 34.746 29.732 34.746 28.249 L 34.746 28.249 L 34.746 21.751 Q 34.746 20.268 35.505 19.456 Q 36.264 18.644 37.694 18.644 L 37.694 18.644 Q 39.124 18.644 39.883 19.456 Q 40.643 20.268 40.643 21.751 L 40.643 21.751 L 40.643 28.249 Q 40.643 29.732 39.883 30.544 Q 39.124 31.356 37.694 31.356 L 37.694 31.356 Z M 37.694 29.59 Q 38.701 29.59 38.701 28.372 L 38.701 28.372 L 38.701 21.628 Q 38.701 20.41 37.694 20.41 L 37.694 20.41 Q 36.688 20.41 36.688 21.628 L 36.688 21.628 L 36.688 28.372 Q 36.688 29.59 37.694 29.59 L 37.694 29.59 Z M 41.949 31.179 L 41.949 18.821 L 44.721 18.821 L 45.957 27.666 L 45.992 27.666 L 47.228 18.821 L 50 18.821 L 50 31.179 L 48.164 31.179 L 48.164 21.822 L 48.129 21.822 L 46.716 31.179 L 45.092 31.179 L 43.679 21.822 L 43.644 21.822 L 43.644 31.179 L 41.949 31.179 Z'},{id:1775654839139.341,isText:false,type:'icon',typeKey:'online_1775654839139',assetKey:'online_1775654839139',name:'music-fill',path:'M 25 28.198 V 6.25 h 16.667 v 6.25 h -12.5 v 22.917 a 8.333 8.333 0 1 1 -4.167 -7.219 Z',x:15.9464,y:26.6915,scale:0.237091,iconWeight:23.71,rotation:0,rotationDeg:0,flipX:false},{id:1775654873391.0227,isText:false,type:'icon',typeKey:'online_1775654873390',assetKey:'online_1775654873390',name:'bed',path:'M 42.188 22.529 a 7.754 7.754 0 0 0 -3.125 -0.654 H 10.938 a 7.764 7.764 0 0 0 -3.125 0.653 A 7.821 7.821 0 0 0 3.125 29.688 v 10.938 a 1.563 1.563 0 0 0 3.125 0 v -0.781 a 0.791 0.791 0 0 1 0.781 -0.781 h 35.938 a 0.791 0.791 0 0 1 0.781 0.781 v 0.781 a 1.563 1.563 0 0 0 3.125 0 V 29.688 a 7.821 7.821 0 0 0 -4.688 -7.158 Z M 36.719 7.813 H 13.281 a 5.469 5.469 0 0 0 -5.469 5.469 v 7.031 a 0.391 0.391 0 0 0 0.499 0.375 A 9.326 9.326 0 0 1 10.938 20.313 h 0.413 a 0.391 0.391 0 0 0 0.391 -0.347 A 3.125 3.125 0 0 1 14.844 17.188 h 5.469 a 3.125 3.125 0 0 1 3.105 2.778 a 0.391 0.391 0 0 0 0.391 0.347 h 2.389 a 0.391 0.391 0 0 0 0.391 -0.347 A 3.125 3.125 0 0 1 29.688 17.188 h 5.469 a 3.125 3.125 0 0 1 3.105 2.778 a 0.391 0.391 0 0 0 0.391 0.347 h 0.41 a 9.326 9.326 0 0 1 2.626 0.376 A 0.391 0.391 0 0 0 42.188 20.313 v -7.031 a 5.469 5.469 0 0 0 -5.469 -5.469 Z',x:22.3414,y:72.948,scale:0.26805,iconWeight:26.8,rotation:-0.220112,rotationDeg:-12.61,flipX:false},{id:1775654898923.3157,isText:false,type:'icon',typeKey:'online_1775654898922',assetKey:'online_1775654898922',name:'moon-stars-fill',path:'M 18.75 0.869 a 2.406 2.406 0 0 1 0.25 2.681 a 22.5 22.5 0 0 0 -2.744 10.813 c 0 12.566 10.244 22.741 22.869 22.741 q 2.475 -0.003 4.791 -0.5 a 2.469 2.469 0 0 1 2.531 0.988 a 2.281 2.281 0 0 1 -0.097 2.791 A 26.094 26.094 0 0 1 26.075 50 C 11.669 50 0 38.394 0 24.094 C 0 13.331 6.606 4.1 16.012 0.188 A 2.344 2.344 0 0 1 18.75 0.869 Z M 33.731 9.838 a 0.678 0.678 0 0 1 1.287 0 l 1.209 3.631 c 0.541 1.619 1.809 2.888 3.428 3.428 l 3.631 1.209 a 0.678 0.678 0 0 1 0 1.287 l -3.631 1.209 a 5.406 5.406 0 0 0 -3.428 3.428 l -1.209 3.631 a 0.678 0.678 0 0 1 -1.287 0 l -1.209 -3.631 A 5.406 5.406 0 0 0 29.094 20.603 l -3.631 -1.209 a 0.678 0.678 0 0 1 0 -1.287 l 3.631 -1.209 a 5.406 5.406 0 0 0 3.428 -3.428 z M 43.322 0.309 a 0.453 0.453 0 0 1 0.856 0 l 0.806 2.419 c 0.359 1.081 1.206 1.928 2.288 2.288 l 2.419 0.806 a 0.453 0.453 0 0 1 0 0.856 l -2.419 0.806 a 3.625 3.625 0 0 0 -2.288 2.288 l -0.806 2.419 a 0.453 0.453 0 0 1 -0.856 0 l -0.806 -2.419 a 3.625 3.625 0 0 0 -2.288 -2.288 l -2.419 -0.806 a 0.453 0.453 0 0 1 0 -0.856 l 2.419 -0.806 c 1.081 -0.359 1.928 -1.206 2.288 -2.288 z',x:14.6675,y:60.5845,scale:0.2,iconWeight:20,rotation:0,rotationDeg:0,flipX:false},{id:1775654928828.9468,isText:false,type:'icon',typeKey:'online_1775654928828',assetKey:'online_1775654928828',name:'teddy-bear',path:'M 32.813 39.854 c -1.729 0 -3.125 -1.75 -3.125 -3.917 c 0 -2.146 1.396 -3.896 3.125 -3.896 s 3.125 1.75 3.125 3.896 c 0 2.167 -1.396 3.917 -3.125 3.917 Z M 25 23.438 c -2.583 0 -4.688 -1.75 -4.688 -3.896 c 0 -2.167 2.104 -3.917 4.688 -3.917 s 4.688 1.75 4.688 3.917 c 0 2.146 -2.104 3.896 -4.688 3.896 Z m -7.813 16.417 c -1.729 0 -3.125 -1.75 -3.125 -3.917 c 0 -2.146 1.396 -3.896 3.125 -3.896 s 3.125 1.75 3.125 3.896 c 0 2.167 -1.396 3.917 -3.125 3.917 Z M 25 17.188 c 0.854 0 1.563 0.708 1.563 1.563 s -0.708 1.563 -1.563 1.563 s -1.563 -0.708 -1.563 -1.563 s 0.708 -1.563 1.563 -1.563 Z M 39.063 25 c -0.667 0 -1.313 0.146 -1.896 0.417 c -1 -1.271 -2.354 -2.354 -3.979 -3.188 c 1.188 -1.667 1.896 -3.688 1.896 -5.875 v -0.125 c 2.271 -0.479 3.979 -2.5 3.979 -4.938 c 0 -2.771 -2.271 -5.042 -5.042 -5.042 c -1.438 0 -2.771 0.604 -3.646 1.563 a 10.021 10.021 0 0 0 -10.75 0 C 18.75 6.854 17.417 6.25 15.979 6.25 C 13.208 6.25 10.938 8.521 10.938 11.292 c 0 2.417 1.708 4.438 3.958 4.938 v 0.125 c 0 2.188 0.729 4.229 1.896 5.875 c -1.604 0.833 -2.958 1.917 -3.958 3.188 A 4.667 4.667 0 0 0 6.25 29.688 c 0 2.604 2.083 4.688 4.688 4.688 h 0.125 c -0.083 0.5 -0.125 1.042 -0.125 1.563 c 0 4.313 2.792 7.813 6.25 7.813 c 2.104 0 3.958 -1.313 5.104 -3.313 c 0.875 0.125 1.771 0.188 2.708 0.188 s 1.833 -0.063 2.708 -0.188 c 1.146 2 3 3.313 5.104 3.313 c 3.458 0 6.25 -3.5 6.25 -7.813 c 0 -0.521 -0.042 -1.063 -0.125 -1.563 h 0.125 c 2.604 0 4.688 -2.083 4.688 -4.688 S 41.667 25 39.063 25 Z',x:62.6293,y:81.0482,scale:0.446171,iconWeight:44.62,rotation:0.128573,rotationDeg:7.37,flipX:false},{id:1775654952524.623,isText:false,type:'icon',typeKey:'online_1775654952524',assetKey:'online_1775654952524',name:'heart-key',path:'M 18.594 3.89 c -1.406 0.016 -2.744 0.47 -3.896 1.191 c -2.627 1.664 -4.121 4.714 -3.008 7.302 l 0.664 1.553 l -1.553 -0.664 c -2.104 -0.908 -4.514 -0.088 -6.232 1.66 c -0.394 0.41 -0.76 0.859 -1.07 1.348 c -1.657 2.637 -1.899 6.24 1.284 9.424 C 7.054 27.969 11.523 28.467 16.016 28.359 c 2.256 -0.059 4.482 -0.244 6.436 -0.361 c 0.488 -0.029 0.957 -0.059 1.406 -0.078 l 18.193 18.193 l 2.48 -2.48 l -0.01 -0.01 l 3.184 -3.174 l -2.48 -2.48 l -3.184 3.174 l -1.797 -1.797 l 2.07 -2.07 l -2.48 -2.48 l -2.07 2.07 l -1.66 -1.66 l 5.381 -5.391 l -2.48 -2.48 l -5.381 5.391 l -7.285 -7.285 c 0.02 -0.449 0.049 -0.918 0.078 -1.406 c 0.117 -1.953 0.303 -4.18 0.361 -6.436 c 0.098 -4.482 -0.391 -8.96 -2.656 -11.232 c -1.787 -1.791 -3.721 -2.495 -5.527 -2.476 Z',x:68.1716,y:22.0019,scale:0.346599,iconWeight:34.66,rotation:0,rotationDeg:0,flipX:false},{id:1775654962479.3372,isText:false,type:'icon',typeKey:'star-4',assetKey:'star-4',name:'Star',path:'M 25 2.083 L 18.75 18.75 l -16.667 6.25 l 16.667 6.25 l 6.25 16.667 l 6.25 -16.667 l 16.667 -6.25 l -16.667 -6.25 z',x:41.0998,y:81.0482,scale:0.262809,iconWeight:26.28,rotation:0.031163,rotationDeg:1.79,flipX:false},{id:1775654963004.011,isText:false,type:'icon',typeKey:'star-4',assetKey:'star-4',name:'Star',path:'M 25 2.083 L 18.75 18.75 l -16.667 6.25 l 16.667 6.25 l 6.25 16.667 l 6.25 -16.667 l 16.667 -6.25 l -16.667 -6.25 z',x:80.9614,y:70.1769,scale:0.2,iconWeight:20,rotation:-0.153763,rotationDeg:-8.81,flipX:false}]},editorDefaults:{strokeWidth:2.5,basePlateGap:1,gap:3,smooth:2,letterSpacing:0}},svg:'<?xml version="1.0"?>\n<!-- Created with xTool Creative Space (https://www.xtool.com/pages/software) -->\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xcs="https://www.xtool.com/pages/software" version="1.1" preserveAspectRatio="xMinYMin meet" width="314.0084788006255mm" height="315.83741845025014mm" viewBox="436.63707275599376 49.9192118692099 314.0084788006255 315.83741845025014" xcs:version="1.6.6"><style></style>\n<path transform="matrix(0.352782,0,0,0.352782,436.636337,49.918889)" stroke="#000000" fill="none" vector-effect="non-scaling-stroke" data-view-type="laser" d="M423.79271 1.64274C394.87771 8.00174 370.46470999999997 25.12674 353.77171 50.757740000000005 346.92271 61.27474000000001 343.90171 64.75774000000001 341.62971 64.75774000000001 340.54771 64.75774000000001 335.52970999999997 62.53174000000001 330.47771 59.80974000000001 319.71471 54.012740000000015 303.39071 48.32774000000001 292.79271 46.686740000000015 281.78271 44.981740000000016 258.24771 46.000740000000015 248.52971 48.603740000000016 223.37171 55.341740000000016 201.01871 71.40774000000002 186.82371 92.95474000000002 175.64871 109.91774000000001 170.15471 127.44874000000002 168.93871000000001 150.02774000000002 167.94671000000002 168.41974000000002 168.48171000000002 167.88374000000002 150.07171000000002 168.91574000000003 119.70071000000003 170.61874000000003 95.84271000000003 180.83274000000003 76.34271000000003 200.48274000000004 40.90171000000002 236.19474000000002 35.20371000000002 290.74374 62.35371000000002 334.39374000000004 68.34471000000002 344.02474000000007 68.22171000000002 345.01074000000006 60.54271000000002 348.87074 42.619710000000026 357.88174000000004 24.467710000000018 374.22974 15.590710000000023 389.35674 3.2197100000000223 410.43474-1.8962899999999756 433.17274 0.6267100000000223 455.86074 4.728710000000023 492.75074 24.59471000000002 523.15674 56.95371000000002 542.06974 61.744710000000026 544.8707400000001 65.87071000000002 547.9477400000001 66.12171000000002 548.90774 66.37571000000003 549.87874 64.56071000000003 553.89474 62.03271000000002 557.95574 35.50371000000003 600.57174 40.97771000000002 653.66274 75.64671000000003 689.9917399999999 99.16471000000003 714.6357399999999 125.19371000000002 725.2897399999999 162.97171000000003 725.7377399999999 166.61471000000003 725.7807399999999 167.79271000000003 728.54874 167.79871000000003 737.0787399999999 167.83571000000003 788.29874 202.35371000000004 833.3687399999999 251.58671000000004 846.4797399999999 260.01571 848.7247399999999 263.39671000000004 849.0737399999999 277.29271000000006 849.1347399999999 290.9867100000001 849.1947399999998 294.57971000000003 848.8687399999999 302.22571000000005 846.8707399999998 313.71771000000007 843.8677399999998 324.97971000000007 839.0947399999999 334.34271000000007 833.2587399999999 339.4167100000001 830.0967399999998 342.40871000000004 828.8187399999998 343.74671000000006 829.2427399999999 344.82471000000004 829.5857399999999 347.15571000000006 832.42874 348.92671000000007 835.5617399999999 354.61771000000005 845.6327399999999 359.87471000000005 852.8387399999999 367.01371000000006 860.3537399999999 391.14071000000007 885.7527399999999 423.2287100000001 898.1027399999999 456.3737100000001 894.74574 470.3077100000001 893.3337399999999 479.28971000000007 890.6697399999999 493.29271000000006 883.79374 513.5837100000001 873.83074 529.9777100000001 858.5837399999999 540.4357100000001 839.95074 543.01971 835.34674 546.1917100000001 830.88674 547.4847100000001 830.03974 549.69671 828.5907400000001 550.17371 828.7067400000001 555.56371 832.01074 580.49071 847.2877400000001 605.04071 852.5627400000001 631.29271 848.28174 642.59171 846.43974 648.9417100000001 844.55074 658.5457100000001 840.1737400000001 697.4107100000001 822.46274 723.79271 782.0627400000001 723.79271 740.25774 723.79271 726.30974 724.3107100000001 725.68674 736.33271 725.18674 750.68071 724.58974 756.43971 723.7947399999999 765.54071 721.15774 812.93671 707.42274 845.83271 664.52274 845.97671 616.25774 846.01671 602.81574 844.87471 594.98874 841.16371 583.25774 838.42771 574.61274 832.0567100000001 561.13374 828.41071 556.27574 823.34371 549.5247400000001 823.88171 547.87174 832.65071 543.2597400000001 860.96271 528.3687400000001 882.17871 499.7407400000001 888.47171 467.94074000000006 890.67471 456.8077400000001 890.66771 435.12574000000006 888.45871 425.16474000000005 881.13571 392.13774000000006 860.84871 365.7357400000001 830.51771 349.75774000000007 823.4957099999999 346.05874000000006 822.96571 343.2737400000001 827.9137099999999 336.0817400000001 833.0497099999999 328.6167400000001 839.70971 313.59674000000007 842.4687099999999 303.25774000000007 844.8557099999998 294.3127400000001 845.1397099999999 291.46474000000006 845.1617099999999 276.25774000000007 845.1837099999999 260.9857400000001 844.9197099999999 258.2717400000001 842.5587099999999 249.55174000000008 837.3007099999999 230.13574000000008 827.5607099999999 213.5707400000001 813.4177099999999 199.99274000000008 793.34371 180.72174000000007 769.9387099999999 170.5707400000001 742.2927099999999 169.14674000000008 724.7257099999999 168.24074000000007 724.31471 167.9107400000001 723.3567099999999 153.94174000000007 722.5877099999999 142.73674000000005 720.3947099999999 129.43274000000008 718.1317099999999 122.25774000000007 706.1367099999999 84.22174000000007 674.9277099999999 55.40974000000007 637.3147099999999 47.645740000000075 626.4717099999999 45.407740000000075 606.8667099999999 45.185740000000074 595.7927099999998 47.17474000000008 584.8427099999998 49.14174000000008 573.6727099999998 53.154740000000075 561.9877099999999 59.31974000000008 556.3197099999999 62.31074000000008 550.7727099999998 64.75774000000008 549.6607099999999 64.75774000000008 546.9087099999999 64.75774000000008 543.3177099999999 60.699740000000084 536.7927099999998 50.21974000000009 530.1787099999998 39.595740000000085 516.3007099999999 25.254740000000087 506.04270999999983 18.44474000000009 496.3657099999998 12.019740000000088 482.10470999999984 5.388740000000089 472.29270999999983 2.752740000000088 460.61370999999986-0.3852599999999118 435.61370999999986-0.9572599999999118 423.79270999999983 1.642740000000088" fill-rule="nonzero"></path></svg>'},
       cloud:  {name:'Cloud',  svg:'<?xml version="1.0"?>\n<!-- Created with xTool Creative Space (https://www.xtool.com/pages/software) -->\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xcs="https://www.xtool.com/pages/software" version="1.1" preserveAspectRatio="xMinYMin meet" width="320.51462970931254mm" height="236.27354755371962mm" viewBox="594.4853702906876 115.74289924127615 320.51462970931254 236.27354755371962" xcs:version="1.6.6"><style></style>\n<g><path transform="matrix(0.352778,0,0,0.352778,592.494706,10.511775)" stroke="#000000" fill="none" vector-effect="non-scaling-stroke" data-view-type="laser" d="M580.33126 301.45506C631.80726 312.21106 674.7392600000001 341.57506 704.7662600000001 386.56406 713.7362600000001 400.00406 720.8392600000001 414.16306 727.8122600000002 432.50306L733.1322600000002 446.49606 736.5972600000002 446.31706C738.5032600000002 446.21906 744.7872600000003 445.82206 750.5622600000003 445.43506 796.7702600000002 442.34106 840.5492600000002 471.52006 859.3372600000002 517.93506 866.9092600000002 536.64206 871.5192600000003 564.01206 870.0442600000002 581.49606 869.3892600000003 589.25706 867.0302600000002 604.7650600000001 865.9852600000003 608.1780600000001 865.6372600000003 609.31406 867.8142600000002 612.2360600000001 872.6912600000003 617.1780600000001 918.8652600000003 663.9710600000001 927.2722600000003 738.6140600000001 894.0552600000003 806.8590600000001 869.4372600000003 857.4360600000001 828.1412600000003 892.5790600000001 781.5622600000004 902.5900600000001 769.6772600000004 905.1440600000001 743.3402600000004 905.1820600000001 731.7942600000003 902.6620600000001 719.5812600000004 899.99606 707.6682600000004 895.7150600000001 697.4112600000003 890.3070600000001L688.3102600000003 885.5090600000001 682.6932600000004 892.0020600000001C666.9842600000004 910.1650600000002 653.5412600000003 922.5350600000002 640.0622600000004 931.2300600000001 589.7972600000004 963.6560600000001 528.5682600000004 963.32806 480.8122600000004 930.3780600000001 475.7252600000004 926.8680600000001 471.1682600000004 923.9960600000002 470.68526000000037 923.9960600000002 470.20226000000036 923.9960600000002 466.6532600000004 926.6370600000001 462.79926000000034 929.8660600000002 446.02826000000033 943.9120600000002 421.76826000000034 957.3880600000002 404.09226000000035 962.4770600000002 378.14126000000033 969.9470600000002 350.27326000000033 969.9270600000002 326.51026000000036 962.4200600000001 306.50126000000034 956.0990600000001 291.51626000000033 946.9000600000002 274.96026000000035 930.7750600000002L263.85826000000037 919.9620600000002 253.96026000000037 923.9220600000002C219.5642600000004 937.6820600000002 181.43726000000038 940.6920600000002 145.21726000000038 932.5080600000002 88.93926000000039 919.7920600000002 40.06826000000038 876.1150600000002 17.904260000000377 818.7260600000002 3.4362600000003773 781.2630600000002 1.6192600000003772 734.5150600000002 13.073260000000378 694.4300600000001 22.38526000000038 661.8430600000002 37.19326000000038 636.0070600000001 60.472260000000375 611.7310600000002 79.15526000000037 592.2480600000002 96.12726000000038 580.6010600000002 123.56226000000038 568.4330600000002L133.06226000000038 564.2190600000001 133.1122600000004 541.3580600000001C133.1562600000004 521.5530600000002 133.46826000000038 517.0250600000002 135.4462600000004 507.4960600000001 143.1892600000004 470.2070600000001 159.1532600000004 440.86306000000013 185.22426000000038 415.9960600000001 209.9822600000004 392.38206000000014 238.1622600000004 378.4820600000001 271.5622600000004 373.41106000000013 287.5612600000004 370.98206000000016 312.3542600000004 371.8680600000001 328.0622600000004 375.4310600000001 344.6792600000004 379.2010600000001 355.5642600000004 382.9770600000001 368.48126000000036 389.4550600000001 374.5572600000004 392.5030600000001 379.96526000000034 394.9960600000001 380.4992600000004 394.9960600000001 381.0322600000004 394.9960600000001 384.4342600000004 390.4990600000001 388.0582600000004 385.00206000000014 397.53126000000043 370.6350600000001 404.93226000000044 361.78706000000017 417.83626000000044 349.40006000000017 446.48526000000044 321.8990600000002 479.71726000000046 305.7860600000002 520.7602600000005 299.49606000000017 535.5052600000005 297.2360600000002 564.7432600000004 298.19806000000017 580.3312600000005 301.4550600000002" fill-rule="nonzero"></path>\n<path transform="matrix(0.352778,0,0,0.352778,592.494706,10.511775)" stroke="#000000" fill="none" vector-effect="non-scaling-stroke" data-view-type="laser" d="M522.06226 329.51606C466.89226 338.42105999999995 422.57726 373.93606 399.97326000000004 427.36105999999995 397.40126000000004 433.44005999999996 394.69126000000006 438.25105999999994 393.20126000000005 439.38305999999994 390.76726 441.23305999999997 390.65826000000004 441.23305999999997 387.73526000000004 439.38305999999994 386.09526000000005 438.34505999999993 381.61826 434.90505999999993 377.78726000000006 431.73805999999996 365.22826000000003 421.35705999999993 345.1112600000001 411.17206 329.06226000000004 407.07106 317.38226000000003 404.08506 308.58126000000004 403.03806 294.98826 403.01606 260.20626000000004 402.95905999999997 231.16226000000003 415.14006 205.93226000000004 440.36706 194.23926000000003 452.05805999999995 187.02126000000004 462.06606 179.61826000000005 476.85006 165.30726000000004 505.43005999999997 161.23726000000005 542.15606 169.09126000000006 571.83506 170.45026000000007 576.9720599999999 171.56226000000007 582.24906 171.56226000000007 583.56206 171.56226000000007 586.55106 168.70826000000005 588.3960599999999 161.56226000000007 590.02406 152.42426000000006 592.1070599999999 136.78626000000006 597.86406 127.15326000000007 602.69206 56.79526000000007 637.96006 22.130260000000078 724.11306 47.16126000000007 801.4960599999999 50.93026000000007 813.1470599999999 60.60226000000007 832.09006 68.33226000000008 842.9600599999999 80.52026000000008 860.0980599999999 100.12626000000007 877.7690599999999 117.56226000000007 887.3290599999999 127.53526000000006 892.7970599999999 142.94626000000005 898.55306 154.56226000000007 901.14906 163.69626000000005 903.19106 167.66326000000007 903.4920599999999 185.06226000000007 903.46906 203.41426000000007 903.44406 205.94526000000008 903.22006 215.77926000000008 900.74606 232.76526000000007 896.47406 248.42826000000008 889.98306 260.5622600000001 882.19006 272.3312600000001 874.63106 272.5522600000001 874.66306 278.0652600000001 884.72606 293.1172600000001 912.2040599999999 318.01326000000006 930.37406 347.0212600000001 935.0540599999999 358.7462600000001 936.9450599999999 377.9482600000001 935.78806 389.0622600000001 932.51906 411.0372600000001 926.05706 430.5302600000001 913.95606 450.6582600000001 894.28406 460.1972600000001 884.96106 464.9472600000001 880.9960599999999 466.5742600000001 880.9960599999999 468.1732600000001 880.9960599999999 472.3352600000001 884.3530599999999 479.9772600000001 891.8050599999999 495.19526000000013 906.64506 506.8552600000001 914.3000599999999 522.5622600000002 919.7620599999999 534.6842600000001 923.9770599999999 543.3532600000002 925.3970599999999 557.0622600000002 925.4120599999999 577.1792600000001 925.4350599999999 592.5612600000002 921.6790599999999 610.6602600000001 912.3260599999999 631.9842600000001 901.3070599999999 651.8082600000001 883.0120599999999 666.6642600000001 860.6440599999999 674.0612600000002 849.5070599999999 676.9112600000001 845.9960599999998 678.5552600000001 845.9960599999998 678.8912600000001 845.9960599999998 683.6422600000001 849.4010599999998 689.1142600000001 853.5630599999998 700.43326 862.1720599999999 717.15826 870.8130599999998 729.06226 874.2020599999998 736.04926 876.1910599999999 739.27926 876.4740599999999 754.56226 876.4370599999999 770.7282600000001 876.3980599999999 772.7482600000001 876.1850599999999 781.06226 873.6490599999998 830.5902600000001 858.5370599999999 871.43326 810.6600599999998 883.56226 753.4960599999998 886.6422600000001 738.9810599999998 887.34826 714.9200599999998 885.11726 700.4960599999998 882.03326 680.5530599999998 873.62126 659.7180599999998 863.1672599999999 646.1330599999999 857.55926 638.8440599999999 850.2492599999999 632.2060599999999 840.8122599999999 625.8320599999998 836.3662599999999 622.8290599999998 833.5622599999999 620.2470599999998 833.5622599999999 619.1570599999999 833.5622599999999 618.1790599999999 834.88726 613.7480599999999 836.50726 609.3100599999999 841.5282599999999 595.5500599999999 842.86226 585.7630599999999 842.2732599999999 566.9960599999999 841.65226 547.20706 839.2652599999999 537.05206 831.57526 521.4960599999999 814.4082599999999 486.7660599999999 781.09226 467.6560599999999 747.7452599999999 473.41105999999996 742.6312599999999 474.29405999999994 734.9852599999999 476.32205999999996 730.7542599999999 477.91905999999994 719.5582599999999 482.1460599999999 718.95926 482.25206 715.75326 480.59505999999993 712.2592599999999 478.7880599999999 711.43526 476.88505999999995 707.69426 461.99605999999994 698.28426 424.54205999999994 679.30126 392.00505999999996 653.83526 369.68305999999995 632.2922599999999 350.79905999999994 604.65626 336.72005999999993 577.76126 330.92706 564.85626 328.14806 535.19426 327.39606 522.06226 329.51606" fill-rule="nonzero"></path>\n<path transform="matrix(0.352778,0,0,0.352778,592.494706,10.511775)" stroke="#000000" fill="none" vector-effect="non-scaling-stroke" data-view-type="laser" d="M561.35126 334.05206C587.23626 336.86906 610.72626 345.43206 632.1092600000001 359.84806 668.29726 384.24505999999997 691.5172600000001 418.89205999999996 702.99526 465.61706 706.07126 478.13906 708.0892600000001 482.12706 712.80326 485.00106 717.18726 487.67406 720.07826 487.51706 729.45826 484.09306 751.71726 475.97006 769.43326 475.93005999999997 787.15126 483.96405999999996 816.53726 497.28806 835.73126 528.9000599999999 837.26226 566.4960599999999 837.89226 581.9690599999999 836.26626 593.0110599999999 831.0712599999999 608.53806 826.5582599999999 622.02806 826.87326 623.02306 838.0292599999999 630.44606 847.34026 636.64006 859.3742599999999 648.89406 864.3932599999999 657.28806 876.1742599999999 676.99506 882.66126 704.8330599999999 881.17526 729.30606 877.86726 783.79806 846.6192599999999 834.63406 801.22126 859.3810599999999 779.0222600000001 871.48106 753.85726 874.9260599999999 731.06226 868.98506 720.74726 866.29706 705.16026 858.58706 695.2432600000001 851.26706 690.94226 848.09306 686.03826 844.48406 684.34526 843.24606 681.09226 840.8690600000001 676.64926 840.34406 673.5982600000001 841.97706 672.5902600000001 842.51606 669.8542600000001 846.0040600000001 667.5172600000001 849.72706 645.71126 884.4660600000001 616.7432600000001 908.00206 585.06226 916.71806 575.87126 919.24606 573.64626 919.46506 557.56226 919.42206 537.16026 919.36806 530.01926 917.88606 515.06226 910.60306 502.59026000000006 904.53006 494.80226000000005 898.7790600000001 482.45526000000007 886.5240600000001L471.8482600000001 875.99606H466.6662600000001 461.48426000000006L449.77326000000005 887.7600600000001C430.42726000000005 907.19406 412.45026000000007 919.06506 392.06026 925.87206 350.51726 939.73906 306.61726000000004 923.13406 284.93426 885.35306 277.61826 872.6060600000001 276.53426 871.49606 271.39626 871.49606 267.91826 871.49606 265.56926 872.45006 259.55926 876.30606 225.41425999999998 898.21206 184.68626 904.43006 147.06225999999998 893.48206 103.52425999999998 880.8120600000001 67.88925999999998 845.58506 52.67525999999998 800.17506 46.515259999999984 781.78706 45.14225999999998 772.64306 45.14225999999998 749.99606 45.14225999999998 732.44806 45.46825999999998 727.98406 47.40925999999998 718.99606 55.554259999999985 681.26106 74.01225999999998 649.0420600000001 99.95325999999997 627.27606 119.36325999999997 610.98906 137.30525999999998 601.96506 164.21625999999998 594.95306 177.47925999999998 591.49806 179.53725999999997 587.00606 174.78825999999998 571.88206 167.80826 549.65106 169.63626 517.86306 179.43225999999999 491.14806000000004 193.40825999999998 453.03706000000005 226.87326 421.80006000000003 264.20225999999997 412.02206 300.30125999999996 402.56706 340.85526 410.62706000000003 370.46126 433.14006 389.00726 447.24306 389.66826 447.54406 395.46326 444.54706 398.85426 442.79406 400.28726 440.60906 404.02626 431.49606 417.70225999999997 398.15706 440.72425999999996 371.18106 470.52925999999997 353.56906 497.10225999999994 337.86606 530.4802599999999 330.69406 561.3512599999999 334.05206" fill-rule="nonzero"></path></g></svg>'},
       door:   {name:'Door',   svg:'<?xml version="1.0"?>\n<!-- Created with xTool Creative Space (https://www.xtool.com/pages/software) -->\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xcs="https://www.xtool.com/pages/software" version="1.1" preserveAspectRatio="xMinYMin meet" width="270.21010981235463mm" height="264.4322443644206mm" viewBox="419.57347389371137 83.01693718551971 270.21010981235463 264.4322443644206" xcs:version="1.6.6"><style></style>\n<path transform="matrix(0.352778,0,0,0.352778,419.573474,83.016569)" stroke="#000000" fill="none" vector-effect="non-scaling-stroke" data-view-type="laser" d="M343.069 0.19572C279.32300000000004 5.8707199999999995 227.413 22.19272 177.489 52.25772 117.266 88.52672 68.223 142.77972 37.42699999999999 207.19772 19.682999999999993 244.31372 9.430999999999994 278.96672 2.847999999999992 324.07172 0.6619999999999919 339.05472000000003 0.6589999999999918 339.30572 0.3299999999999921 542.57172L-7.93809462606987e-15 746.07172 2.145999999999992 747.82172C4.179999999999992 749.48172 23.816999999999993 749.57172 383.18 749.57172H762.069L764.102 747.53872C766.135 745.50572 766.136 745.48272 765.768 549.78872 765.5 406.89272000000005 765.081 351.50772 764.216 344.57172 758.241 296.69172000000003 747.294 259.19572000000005 727.575 219.07172000000003 713.9680000000001 191.38472000000002 702.695 173.37772 683.7090000000001 149.00172000000003 632.4570000000001 83.19872000000004 554.6020000000001 32.805720000000036 472.24000000000007 12.124720000000025 434.8810000000001 2.7437200000000246 417.34600000000006 0.505720000000025 378.0690000000001 0.10572000000002468 361.2940000000001-0.06527999999997533 345.5440000000001-0.02427999999997532 343.0690000000001 0.19572000000002468" fill-rule="nonzero"></path></svg>'},
       rectangle:{name:'Rectangle',svg:'<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMinYMin meet" width="110.02987178369324mm" height="39.098634059336064mm" viewBox="546.0198832582803 213.51920756036478 110.02987178369324 39.098634059336064"><rect transform="matrix(1,0,0,1,546.019883,213.519208)" stroke="#000000" fill="none" x="0" y="0" width="110.02987178369325" height="39.098634059336035"></rect></svg>'},
@@ -934,10 +985,10 @@
       _2dCanvas:null,_2dCtx:null,_2dOffset:new Vec2(0,0),_2dScale:1,_2dLayoutData:null,_2dBound:false,
       selection:null,previewPaths:null,previewTimer:null,
       workspaceView:'edit',
-      _fontCache:{},_editingTextObj:null,_cteSelectedPkg:'pacifico',_cteWorldPos:null,_cteDropdownOpen:false,_textWeightUpdateSeq:0,
+      _fontCache:{},_editingTextObj:null,_cteSelectedPkg:'pacifico',_cteWorldPos:null,_cteDropdownOpen:false,_fontPickerOpen:false,_fontPickerSearch:'',_fontPickerCategory:'all',_textWeightUpdateSeq:0,_textSpacingUpdateSeq:0,_singleTextLiveSeq:0,_singleTextPanelHome:null,
       history:[],
       smartGuides:{enabled:true,snapThreshold:5,guides:[]},
-      params:{gap:3,smooth:2,holeEnabled:false,holeDiameter:25,holeOffset:5,bridgeWidth:10,strokeWidth:2,basePlateGap:0,letterSpacing:0},
+      params:{gap:3,smooth:2,holeEnabled:false,holeDiameter:25,holeOffset:5,bridgeWidth:10,strokeWidth:1,basePlateGap:1,letterSpacing:0},
       _objectContours:[],
       _dynamicBasePlateOutline:null,
 
@@ -1064,32 +1115,88 @@
           if(valueEl)valueEl.textContent=formatted;
         }
       },
+      _placeTextPanel(onTop){
+        const panel=document.getElementById('singleTextPanel');
+        if(!panel)return;
+        if(!this._singleTextPanelHome){
+          this._singleTextPanelHome={parent:panel.parentNode,next:panel.nextElementSibling};
+        }
+        const home=this._singleTextPanelHome;
+        if(!home||!home.parent)return;
+        if(onTop){
+          const signSizePanel=home.parent.querySelector('#signSizePanel');
+          if(signSizePanel){
+            // Keep insertion idempotent: if Text is already right after Room Sign Size,
+            // do not move it again (prevents order jumping after mouseup refresh).
+            if(panel.parentNode===home.parent&&panel.previousElementSibling===signSizePanel)return;
+            const anchor=signSizePanel.nextElementSibling;
+            if(anchor&&anchor!==panel){
+              home.parent.insertBefore(panel,anchor);
+            }else if(!anchor){
+              home.parent.appendChild(panel);
+            }
+          }else{
+            const header=home.parent.querySelector('.sidebar-header');
+            const fallbackAnchor=(header&&header.nextElementSibling)?header.nextElementSibling:null;
+            if(fallbackAnchor&&fallbackAnchor!==panel){
+              home.parent.insertBefore(panel,fallbackAnchor);
+            }else if(header&&panel!==header.nextElementSibling){
+              home.parent.appendChild(panel);
+            }
+          }
+          return;
+        }
+        if(panel.parentNode!==home.parent||panel.nextElementSibling!==home.next){
+          if(home.next&&home.next.parentNode===home.parent)home.parent.insertBefore(panel,home.next);
+          else home.parent.appendChild(panel);
+        }
+      },
       _updateTextPanel(){
         const input=document.getElementById('singleTextInput');
         const fontSel=document.getElementById('singleTextFont');
+        const fontLabel=document.getElementById('singleTextFontLabel');
         const btn=document.getElementById('btnSingleAddText');
+        const lsInput=document.getElementById('inLetterSpacingNum');
         const isSingle=this._isSingleTemplate();
         const selectedText=(!isSingle&&this.selection&&this.selection.isText)?this.selection:null;
         const selectedIcon=(!isSingle&&this.selection&&!this.selection.isText)?this.selection:null;
 
         if(fontSel&&this._cteSelectedPkg)fontSel.value=this._cteSelectedPkg;
+        if(fontLabel){
+          const info=TEXT_FONTS.find(f=>f.pkg===this._cteSelectedPkg);
+          fontLabel.textContent=info?info.name:'Select font';
+          if(info)fontLabel.style.fontFamily=`'${info.name}', sans-serif`;
+          else fontLabel.style.fontFamily='inherit';
+        }
 
         if(isSingle){
-          if(btn){btn.textContent='Add Text';btn.disabled=false;}
+          if(btn){btn.textContent='Add Text';btn.disabled=false;btn.style.display='';}
         }else if(selectedText){
           if(input&&document.activeElement!==input)input.value=selectedText.text||'';
           if(fontSel&&selectedText.fontPkg){fontSel.value=selectedText.fontPkg;this._cteSelectedPkg=selectedText.fontPkg;}
-          if(btn){btn.textContent='Update Text';btn.disabled=false;}
+          if(btn){btn.style.display='none';}
         }else{
-          if(btn){btn.textContent='Update Text';btn.disabled=true;}
+          if(btn){btn.style.display='none';}
         }
 
         if(selectedIcon)this._setFrameControlValue('inIconWeightNum',Math.round((selectedIcon.scale||1)*100),0);
         if(selectedText)this._setFrameControlValue('inTextWeightNum',Math.round(selectedText.textWeight||0),0);
         if(selectedText){
+          const spacing=Number.isFinite(selectedText.textLetterSpacing)?selectedText.textLetterSpacing:0;
+          this._setFrameControlValue('inLetterSpacingNum',spacing,0);
+        }else if(lsInput&&!isSingle&&document.activeElement!==lsInput){
+          this._setFrameControlValue('inLetterSpacingNum',0,0);
+        }
+        if(selectedText){
           const textGapMM=Number.isFinite(selectedText.textContourGap)?selectedText.textContourGap:this.params.strokeWidth;
           const gapDisplay=this.displayUnit==='inch'?(textGapMM/25.4):textGapMM;
           this._setFrameControlValue('inTextContourGapNum',gapDisplay,this.displayUnit==='inch'?2:1);
+        }
+        if(fontLabel){
+          const info=TEXT_FONTS.find(f=>f.pkg===this._cteSelectedPkg);
+          fontLabel.textContent=info?info.name:'Select font';
+          if(info)fontLabel.style.fontFamily=`'${info.name}', sans-serif`;
+          else fontLabel.style.fontFamily='inherit';
         }
       },
       _isSingleTemplate(){return this.currentTemplateKey==='single';},
@@ -1098,30 +1205,37 @@
         const strokePanel=document.getElementById('strokePanel');
         const baseGapPanel=document.getElementById('basePlateGapPanel');
         const singleTextPanel=document.getElementById('singleTextPanel');
-        const letterSpacingPanel=document.getElementById('letterSpacingPanel');
-        const iconWeightPanel=document.getElementById('iconWeightPanel');
-        const textWeightPanel=document.getElementById('textWeightPanel');
-        const textContourGapPanel=document.getElementById('textContourGapPanel');
+        const iconWeightRow=document.getElementById('iconWeightRow');
+        const textLetterSpacingRow=document.getElementById('textLetterSpacingRow');
+        const textWeightRow=document.getElementById('textWeightRow');
+        const textContourGapRow=document.getElementById('textContourGapRow');
         const show=(el,on)=>{if(el)el.style.display=on?'':'none';};
 
         show(strokePanel,false);show(baseGapPanel,false);show(singleTextPanel,false);
-        show(letterSpacingPanel,false);show(iconWeightPanel,false);show(textWeightPanel,false);show(textContourGapPanel,false);
+        show(iconWeightRow,false);
+        show(textLetterSpacingRow,false);show(textWeightRow,false);show(textContourGapRow,false);
 
         if(isSingle){
           show(singleTextPanel,true);
+          this._placeTextPanel(false);
           return;
         }
-        if(!this.selection)return;
+        if(!this.selection){
+          show(baseGapPanel,true);
+          this._placeTextPanel(false);
+          return;
+        }
         if(this.selection.isText){
           show(singleTextPanel,true);
-          show(letterSpacingPanel,true);
-          show(textWeightPanel,true);
-          show(textContourGapPanel,true);
+          show(textLetterSpacingRow,true);
+          show(textWeightRow,true);
+          show(textContourGapRow,true);
+          this._placeTextPanel(true);
           return;
         }
         show(strokePanel,true);
-        show(baseGapPanel,true);
-        show(iconWeightPanel,true);
+        show(iconWeightRow,true);
+        this._placeTextPanel(false);
       },
       _updateTemplateModeUI(){
         this._updateRightPanelsBySelection();
@@ -1129,8 +1243,10 @@
       },
       _initSingleTextPanel(){
         const fontSel=document.getElementById('singleTextFont');
+        const fontTrigger=document.getElementById('singleTextFontTrigger');
         const input=document.getElementById('singleTextInput');
         const addBtn=document.getElementById('btnSingleAddText');
+        this._placeTextPanel(false);
         if(fontSel){
           fontSel.innerHTML='';
           TEXT_FONTS.forEach(f=>{
@@ -1139,7 +1255,31 @@
             fontSel.appendChild(opt);
           });
           fontSel.value=this._cteSelectedPkg||'pacifico';
-          fontSel.addEventListener('change',()=>{this._cteSelectedPkg=fontSel.value;});
+          fontSel.addEventListener('change',async()=>{
+            this._cteSelectedPkg=fontSel.value;
+            if(this._isSingleTemplate()||!this.selection||!this.selection.isText)return;
+            const text=((input&&input.value)||'').trim();
+            if(!text)return;
+            const ticket=++this._singleTextLiveSeq;
+            try{
+              await this._convertTextToAsset(text,this._cteSelectedPkg,null,this.selection);
+              if(ticket!==this._singleTextLiveSeq)return;
+              this._updateTextPanel();
+            }catch(e){console.error('Sidebar live font update error:',e);}
+          });
+        }
+        if(fontTrigger){
+          const openPicker=(e)=>{
+            if(e)e.preventDefault();
+            if(!this._isSingleTemplate()&&(!this.selection||!this.selection.isText))return;
+            this._openSidebarFontPicker();
+          };
+          fontTrigger.addEventListener('click',openPicker);
+          fontTrigger.addEventListener('keydown',e=>{
+            if(e.key==='Enter'||e.key===' '){
+              openPicker(e);
+            }
+          });
         }
         const addTextFromPanel=async()=>{
           const text=(input&&input.value?input.value:'').trim();
@@ -1159,8 +1299,36 @@
             this._updateTextPanel();
           }catch(e){console.error('Sidebar text update error:',e);}
         };
+        let liveTimer=null;
+        const liveEditSelectedText=()=>{
+          if(this._isSingleTemplate())return;
+          if(!this.selection||!this.selection.isText)return;
+          const text=((input&&input.value)||'').trim();
+          if(!text)return;
+          const pkg=(fontSel&&fontSel.value)||this._cteSelectedPkg||this.selection.fontPkg||'pacifico';
+          this._cteSelectedPkg=pkg;
+          const editObj=this.selection;
+          const ticket=++this._singleTextLiveSeq;
+          if(liveTimer)clearTimeout(liveTimer);
+          liveTimer=setTimeout(async()=>{
+            try{
+              await this._convertTextToAsset(text,pkg,null,editObj);
+              if(ticket!==this._singleTextLiveSeq)return;
+              this._updateTextPanel();
+            }catch(e){console.error('Sidebar live text update error:',e);}
+          },80);
+        };
         if(addBtn)addBtn.addEventListener('click',addTextFromPanel);
-        if(input)input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addTextFromPanel();}});
+        if(input){
+          input.addEventListener('input',liveEditSelectedText);
+          input.addEventListener('keydown',e=>{
+            if(e.key==='Enter'){
+              e.preventDefault();
+              if(this._isSingleTemplate())addTextFromPanel();
+              else liveEditSelectedText();
+            }
+          });
+        }
       },
 
       _loadSVGDesign(svgContent,templateKey){
@@ -1232,6 +1400,9 @@
           this.objects=[];
           this.selection=null;
           if(templateKey)this.currentTemplateKey=templateKey;
+          if(templateKey&&SVG_TEMPLATES[templateKey]?.contentLayer){
+            try{this.applyContentLayer(SVG_TEMPLATES[templateKey].contentLayer);}catch(e){console.warn('Content layer apply failed:',e);}
+          }
           this._updateTemplateModeUI();
           this._updateTransformSliders();
           this._initialWorkspacePlacementDone=false;
@@ -1642,28 +1813,35 @@
       async _convertTextToAsset(text,pkg,worldPos,editObj){
         const loadResult=await this._loadFont(pkg);const font=loadResult.font;const usedPkg=loadResult.usedPkg||pkg;
         const textWeight=editObj&&Number.isFinite(editObj.textWeight)?editObj.textWeight:0;
+        const spacingPct=editObj&&Number.isFinite(editObj.textLetterSpacing)?editObj.textLetterSpacing:0;
         const fontSize=200;
-        const spacingPct=this.params.letterSpacing||0;
-        const extraSpacing=fontSize*spacingPct/100;
         const glyphs=font.stringToGlyphs(text);
         const scale=fontSize/font.unitsPerEm;
-        let xPos=0;const combinedPath=new opentype.Path();
-        for(let i=0;i<glyphs.length;i++){
-          const glyph=glyphs[i];
-          const gPath=glyph.getPath(xPos,0,fontSize);
-          gPath.commands.forEach(cmd=>combinedPath.commands.push(cmd));
-          xPos+=(glyph.advanceWidth||0)*scale;
-          if(i<glyphs.length-1){
-            const kern=font.getKerningValue(glyph,glyphs[i+1]);
-            xPos+=kern*scale+extraSpacing;
+        const buildPathWithSpacing=(spacingPercent)=>{
+          const extraSpacing=fontSize*spacingPercent/100;
+          let xPos=0;const p=new opentype.Path();
+          for(let i=0;i<glyphs.length;i++){
+            const glyph=glyphs[i];
+            const gPath=glyph.getPath(xPos,0,fontSize);
+            gPath.commands.forEach(cmd=>p.commands.push(cmd));
+            xPos+=(glyph.advanceWidth||0)*scale;
+            if(i<glyphs.length-1){
+              const kern=font.getKerningValue(glyph,glyphs[i+1]);
+              xPos+=kern*scale+extraSpacing;
+            }
           }
-        }
-        const rawPathData=combinedPath.toPathData(2);
-        const bb=combinedPath.getBoundingBox();const w=bb.x2-bb.x1,h=bb.y2-bb.y1;
-        if(w<0.1||h<0.1)throw new Error('Cannot generate path');
-        const targetSize=50;const sc=targetSize/Math.max(w,h);
-        const ox=(targetSize-w*sc)/2-bb.x1*sc;const oy=(targetSize-h*sc)/2-bb.y1*sc;
-        const normalizedRawFill=this._transformPathD(rawPathData,sc,sc,ox,oy);
+          const bb=p.getBoundingBox();
+          return{pathData:p.toPathData(2),bb};
+        };
+        const base=buildPathWithSpacing(0);
+        const current=buildPathWithSpacing(spacingPct);
+        const baseW=base.bb.x2-base.bb.x1,baseH=base.bb.y2-base.bb.y1;
+        const curW=current.bb.x2-current.bb.x1,curH=current.bb.y2-current.bb.y1;
+        if(baseW<0.1||baseH<0.1||curW<0.1||curH<0.1)throw new Error('Cannot generate path');
+        const targetSize=50;const sc=targetSize/Math.max(baseW,baseH);
+        const curCx=(current.bb.x1+current.bb.x2)*0.5,curCy=(current.bb.y1+current.bb.y2)*0.5;
+        const ox=targetSize*0.5-curCx*sc,oy=targetSize*0.5-curCy*sc;
+        const normalizedRawFill=this._transformPathD(current.pathData,sc,sc,ox,oy);
         const normalizedFill=this._applyTextWeight(normalizedRawFill,textWeight);
         const normalizedOuter=this._removePathHoles(normalizedFill);
         if(editObj){
@@ -1672,13 +1850,14 @@
           editObj.textOuterContourPath=normalizedOuter;
           editObj.text=text;editObj.fontPkg=usedPkg;
           editObj.textWeight=textWeight;
+          editObj.textLetterSpacing=spacingPct;
           editObj.textContourGap=Number.isFinite(editObj.textContourGap)?editObj.textContourGap:this.params.strokeWidth;
           ASSETS[editObj.type]={name:text,path:normalizedFill};
         }
         else{
           const key='text_'+Date.now();ASSETS[key]={name:text,path:normalizedFill};
           const c=this._getBasePlateCenter();
-          this.objects.push({id:Date.now()+Math.random(),type:key,path:normalizedFill,textFillPath:normalizedFill,textOuterContourPath:normalizedOuter,x:worldPos?worldPos.x:c.x,y:worldPos?worldPos.y:c.y,scale:1.5,rotation:0,flipX:false,isText:true,text,fontPkg:usedPkg,textWeight:0,textContourGap:this.params.strokeWidth});
+          this.objects.push({id:Date.now()+Math.random(),type:key,path:normalizedFill,textFillPath:normalizedFill,textOuterContourPath:normalizedOuter,x:worldPos?worldPos.x:c.x,y:worldPos?worldPos.y:c.y,scale:1.5,rotation:0,flipX:false,isText:true,text,fontPkg:usedPkg,textWeight:0,textLetterSpacing:0,textContourGap:this.params.strokeWidth});
         }
         this.render();this.triggerPreview();return loadResult;
       },
@@ -1771,6 +1950,105 @@
         const dropdown=document.getElementById('cteFontDropdown');
         if(dropdown){dropdown.innerHTML='';TEXT_FONTS.forEach(f=>{const el=makeFontItem(f,dropdown,true);if(f.pkg===this._cteSelectedPkg)el.classList.add('selected');el.onclick=e=>{e.stopPropagation();this._cteSelectedPkg=f.pkg;this._syncCteFontLabel();dropdown.querySelectorAll('.cte-font-option').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');this._toggleCteDropdown(false);const input=document.getElementById('cteInput');if(!f.isCustom)input.style.fontFamily=`'${f.name}', sans-serif`;};});}
       },
+      _getFontCategory(font){
+        const name=(font?.name||'').toLowerCase();
+        const pkg=(font?.pkg||'').toLowerCase();
+        if(/pacifico|lobster|dancing|caveat|great-vibes|satisfy|tangerine|permanent-marker/.test(name+pkg))return'handwriting';
+        if(/bebas|unbounded|oswald/.test(name+pkg))return'display';
+        if(/playfair|lora|merriweather|cinzel|cormorant|crimson|libre-baskerville|dm-serif|spectral|source-serif|fraunces|zilla-slab/.test(name+pkg))return'serif';
+        return'sans';
+      },
+      _renderFontPickerList(){
+        const list=document.getElementById('fontPickerList');
+        const q=(this._fontPickerSearch||'').trim().toLowerCase();
+        const cat=this._fontPickerCategory||'all';
+        if(!list)return;
+        list.innerHTML='';
+        const filtered=TEXT_FONTS.filter(f=>{
+          const category=this._getFontCategory(f);
+          const catOk=(cat==='all'||category===cat);
+          const qOk=(!q||f.name.toLowerCase().includes(q)||f.pkg.toLowerCase().includes(q));
+          return catOk&&qOk;
+        });
+        filtered.forEach(f=>{
+          const item=document.createElement('button');
+          item.type='button';
+          item.className='font-picker-item'+(f.pkg===this._cteSelectedPkg?' selected':'');
+          item.dataset.pkg=f.pkg;
+          const category=this._getFontCategory(f);
+          const categoryLabel=category==='handwriting'?'HANDWRITING':category==='display'?'DISPLAY':category==='serif'?'SERIF':'SANS-SERIF';
+          item.innerHTML=`<span class="font-picker-name">${f.name}</span><span class="font-picker-meta"><span class="font-picker-tag">${categoryLabel}</span><span class="font-picker-check">✓</span></span>`;
+          const nameEl=item.querySelector('.font-picker-name');
+          if(nameEl&&!f.isCustom)nameEl.style.fontFamily=`'${f.name}', sans-serif`;
+          item.onclick=()=>this._applySidebarFontFromPicker(f.pkg);
+          list.appendChild(item);
+        });
+      },
+      _renderFontPickerCats(){
+        const holder=document.getElementById('fontPickerCats');
+        if(!holder)return;
+        const cats=[{id:'all',label:'All'},{id:'handwriting',label:'Handwriting'},{id:'display',label:'Display'},{id:'serif',label:'Serif'},{id:'sans',label:'Sans Serif'}];
+        holder.innerHTML='';
+        cats.forEach(c=>{
+          const b=document.createElement('button');
+          b.type='button';
+          b.className='font-picker-chip'+(this._fontPickerCategory===c.id?' active':'');
+          b.textContent=c.label;
+          b.onclick=()=>{this._fontPickerCategory=c.id;this._renderFontPickerCats();this._renderFontPickerList();};
+          holder.appendChild(b);
+        });
+      },
+      _positionSidebarFontPickerDrawer(){
+        const sheet=document.getElementById('fontPickerSheet');
+        const sidebar=document.getElementById('sidebar');
+        if(!sheet)return;
+        const sidebarRect=sidebar?sidebar.getBoundingClientRect():{left:window.innerWidth,width:320};
+        const gap=16;
+        const availableW=Math.max(260,sidebarRect.left-gap*2);
+        const drawerW=Math.max(280,Math.min(420,availableW));
+        const left=Math.max(8,sidebarRect.left-gap-drawerW);
+        sheet.style.left=`${Math.round(left)}px`;
+        sheet.style.top='16px';
+        sheet.style.width=`${Math.round(drawerW)}px`;
+        sheet.style.height='calc(100vh - 32px)';
+      },
+      _openSidebarFontPicker(){
+        const modal=document.getElementById('fontPickerModal');
+        const search=document.getElementById('fontPickerSearch');
+        if(!modal)return;
+        this._positionSidebarFontPickerDrawer();
+        this._fontPickerOpen=true;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+        this._fontPickerCategory='all';
+        this._fontPickerSearch='';
+        if(search)search.value='';
+        this._renderFontPickerCats();
+        this._renderFontPickerList();
+      },
+      _closeSidebarFontPicker(){
+        const modal=document.getElementById('fontPickerModal');
+        if(!modal)return;
+        this._fontPickerOpen=false;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden','true');
+      },
+      async _applySidebarFontFromPicker(pkg){
+        this._cteSelectedPkg=pkg;
+        const fontSel=document.getElementById('singleTextFont');
+        if(fontSel)fontSel.value=pkg;
+        this._updateTextPanel();
+        const sel=this.selection;
+        if(sel&&sel.isText){
+          const ticket=++this._singleTextLiveSeq;
+          try{
+            await this._convertTextToAsset(sel.text||'',pkg,null,sel);
+            if(ticket!==this._singleTextLiveSeq)return;
+            this._updateTextPanel();
+          }catch(e){console.error('Sidebar font picker update error:',e);}
+        }
+        this._closeSidebarFontPicker();
+      },
       _syncCteFontLabel(){const info=TEXT_FONTS.find(f=>f.pkg===this._cteSelectedPkg);const el=document.getElementById('cteFontCurrent');if(!el||!info)return;document.getElementById('cteFontLabel').textContent=info.name;el.style.fontFamily=`'${info.name}', sans-serif`;},
       _toggleCteDropdown(show){const dd=document.getElementById('cteFontDropdown');this._cteDropdownOpen=!!show;dd.classList.toggle('open',this._cteDropdownOpen);},
       _openCanvasEditor(screenPt,worldPt,editObj){
@@ -1848,7 +2126,7 @@
       },
 
       _bindInputs(){
-        window.addEventListener('resize',()=>{this._resize();if(this.workspaceView==='files'){this._resize2D();this._fit2DView();this._render2DView();}});
+        window.addEventListener('resize',()=>{this._resize();if(this.workspaceView==='files'){this._resize2D();this._fit2DView();this._render2DView();}if(this._fontPickerOpen)this._positionSidebarFontPickerDrawer();});
         document.querySelectorAll('.unit-btn').forEach(btn=>{btn.onclick=e=>this._setUnit(e.target.dataset.unit);});
 
         // Door Sign Size inputs
@@ -1899,7 +2177,7 @@
         // Stroke width input binding
         const strokeWidthInput=document.getElementById('inStrokeWidthNum');
         if(strokeWidthInput){
-          const onStrokeChange=()=>{let v=parseFloat(strokeWidthInput.value);if(isNaN(v))v=2;const mm=this.displayUnit==='inch'?v*25.4:v;this.params.strokeWidth=Math.max(0,Math.min(10,mm));this.triggerPreview();};
+          const onStrokeChange=()=>{let v=parseFloat(strokeWidthInput.value);if(isNaN(v))v=1;const mm=this.displayUnit==='inch'?v*25.4:v;this.params.strokeWidth=Math.max(0,Math.min(10,mm));this.triggerPreview();};
           strokeWidthInput.addEventListener('input',onStrokeChange);
           strokeWidthInput.addEventListener('change',()=>{this.saveHistory();onStrokeChange();});
         }
@@ -1907,17 +2185,31 @@
         // Base plate gap input binding
         const bpGapInput=document.getElementById('inBasePlateGapNum');
         if(bpGapInput){
-          const onBpGapChange=()=>{let v=parseFloat(bpGapInput.value);if(isNaN(v))v=0;const mm=this.displayUnit==='inch'?v*25.4:v;this.params.basePlateGap=Math.max(0,Math.min(10,mm));this.triggerPreview();};
+          const onBpGapChange=()=>{let v=parseFloat(bpGapInput.value);if(isNaN(v))v=1;const mm=this.displayUnit==='inch'?v*25.4:v;this.params.basePlateGap=Math.max(0,Math.min(10,mm));this.triggerPreview();};
           bpGapInput.addEventListener('input',onBpGapChange);
           bpGapInput.addEventListener('change',()=>{this.saveHistory();onBpGapChange();});
         }
 
-        // Letter spacing input binding
+        // Letter spacing input binding (selected text only)
         const lsInput=document.getElementById('inLetterSpacingNum');
         if(lsInput){
-          const onLsChange=()=>{let v=parseFloat(lsInput.value);if(isNaN(v))v=0;v=Math.max(-5,Math.min(30,v));this.params.letterSpacing=v;this._reRenderAllText();};
-          lsInput.addEventListener('input',onLsChange);
-          lsInput.addEventListener('change',()=>{this.saveHistory();onLsChange();});
+          const onLsChange=async(saveHistory)=>{
+            const sel=this.selection;
+            if(!sel||!sel.isText)return;
+            let v=parseFloat(lsInput.value);if(isNaN(v))v=0;
+            v=Math.max(-5,Math.min(30,v));
+            sel.textLetterSpacing=v;
+            this._setFrameControlValue('inLetterSpacingNum',v,0);
+            if(saveHistory)this.saveHistory();
+            const ticket=++this._textSpacingUpdateSeq;
+            try{
+              await this._convertTextToAsset(sel.text||'',sel.fontPkg||this._cteSelectedPkg,null,sel);
+              if(ticket!==this._textSpacingUpdateSeq)return;
+              this._updateTextPanel();
+            }catch(e){console.error('Text letter spacing update failed',e);}
+          };
+          lsInput.addEventListener('input',()=>{onLsChange(false);});
+          lsInput.addEventListener('change',()=>{onLsChange(true);});
         }
 
         const iconWeightInput=document.getElementById('inIconWeightNum');
@@ -2083,11 +2375,21 @@
         window.addEventListener('keydown',e=>{if(e.key==='Escape'){this._toggleLeftRail(false);this._closeCanvasEditor();}});
         document.getElementById('canvasTextEditor').addEventListener('mousedown',e=>e.stopPropagation());
         document.getElementById('canvasTextEditor').addEventListener('dblclick',e=>e.stopPropagation());
+        const fontModal=document.getElementById('fontPickerModal');
+        const fontBackdrop=document.getElementById('fontPickerBackdrop');
+        const fontClose=document.getElementById('fontPickerClose');
+        const fontSearch=document.getElementById('fontPickerSearch');
+        const closeFontPicker=()=>this._closeSidebarFontPicker();
+        if(fontBackdrop)fontBackdrop.addEventListener('click',closeFontPicker);
+        if(fontClose)fontClose.addEventListener('click',closeFontPicker);
+        if(fontModal)fontModal.addEventListener('mousedown',e=>e.stopPropagation());
+        if(fontSearch)fontSearch.addEventListener('input',()=>{this._fontPickerSearch=fontSearch.value||'';this._renderFontPickerList();});
         document.getElementById('cteFontCurrent').onclick=e=>{e.stopPropagation();this._toggleCteDropdown(!this._cteDropdownOpen);};
         document.getElementById('cteInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();this._submitCanvasText();}if(e.key==='Escape'){e.preventDefault();this._closeCanvasEditor();}e.stopPropagation();});
         document.getElementById('cteBtnOk').onclick=e=>{e.stopPropagation();this._submitCanvasText();};
         document.getElementById('cteCloseBtn').onclick=e=>{e.stopPropagation();this._closeCanvasEditor();};
         document.addEventListener('mousedown',e=>{const cte=document.getElementById('canvasTextEditor');if(cte.classList.contains('open')&&!cte.contains(e.target))this._closeCanvasEditor();});
+        document.addEventListener('keydown',e=>{if(e.key==='Escape'&&this._fontPickerOpen)closeFontPicker();});
         document.getElementById('btnUndo').onclick=()=>this.undo();
         const btnZoomIn=document.getElementById('btnZoomIn'),btnZoomOut=document.getElementById('btnZoomOut');
         const applyZoom=factor=>{const cx=(this._canvasCssW||this.canvas.width)/2,cy=(this._canvasCssH||this.canvas.height)/2;this.offset.x=cx-(cx-this.offset.x)*factor;this.offset.y=cy-(cy-this.offset.y)*factor;this.scale*=factor;this.render();this._updateZoomText();};
@@ -2095,6 +2397,8 @@
         if(btnZoomOut)btnZoomOut.onclick=()=>applyZoom(1/1.2);
         const btnExportJSON=document.getElementById('btnExportJSON');
         if(btnExportJSON)btnExportJSON.onclick=()=>this.doExportJSON();
+        const btnImportJSON=document.getElementById('btnImportJSON');
+        if(btnImportJSON)btnImportJSON.onclick=()=>this.doImportJSON();
         const btnExportSVG=document.getElementById('btnExportSVG');
         if(btnExportSVG)btnExportSVG.onclick=()=>this.doExport();
       },
@@ -2164,12 +2468,13 @@
         updateGapInput('#basePlateGapPanel','inBasePlateGapNum',this.params.basePlateGap);
         const selectedText=(!this._isSingleTemplate()&&this.selection&&this.selection.isText)?this.selection:null;
         const textGapMM=selectedText&&Number.isFinite(selectedText.textContourGap)?selectedText.textContourGap:this.params.strokeWidth;
-        updateGapInput('#textContourGapPanel','inTextContourGapNum',textGapMM);
+        updateGapInput('#textContourGapRow','inTextContourGapNum',textGapMM);
         this._updateTextPanel();
         this.render();
       },
       _setWorkspaceView(view){
         this.workspaceView=['edit','files','3d'].includes(view)?view:'edit';
+        if(this._fontPickerOpen)this._closeSidebarFontPicker();
         const isFiles=this.workspaceView==='files',is3D=this.workspaceView==='3d',isEdit=this.workspaceView==='edit';
         document.getElementById('workspaceEditView').classList.toggle('hidden',!isEdit);
         document.getElementById('workspaceFilesView').classList.toggle('open',isFiles);
@@ -2425,11 +2730,13 @@
             if(objGap<=0)return;
             const contourGapWorld=obj.isText?objGap:(objGap*Math.max(1,obj.scale));
             const pad=Math.max(contourGapWorld+10,20);
-            const corners=[[0,0],[50,0],[50,50],[0,50]].map(([lx,ly])=>{
-              const ax=(lx-25)*obj.scale*(obj.flipX?-1:1),ay=(ly-25)*obj.scale;
-              const cos=Math.cos(obj.rotation),sin=Math.sin(obj.rotation);
-              return{x:obj.x+ax*cos-ay*sin,y:obj.y+ax*sin+ay*cos};
-            });
+            const local=this._getObjectLocalBounds(obj);
+            const corners=[
+              this._transformAssetPoint(obj,local.minX,local.minY),
+              this._transformAssetPoint(obj,local.maxX,local.minY),
+              this._transformAssetPoint(obj,local.maxX,local.maxY),
+              this._transformAssetPoint(obj,local.minX,local.maxY)
+            ];
             let mnX=Infinity,mnY=Infinity,mxX=-Infinity,mxY=-Infinity;
             corners.forEach(c=>{mnX=Math.min(mnX,c.x);mnY=Math.min(mnY,c.y);mxX=Math.max(mxX,c.x);mxY=Math.max(mxY,c.y);});
             const originX=mnX-pad-contourGapWorld,originY=mnY-pad-contourGapWorld;
@@ -2466,7 +2773,7 @@
               return cleaned&&cleaned.length>=3?GEO.smoothPolygon(cleaned,2):null;
             }).filter(Boolean);
             if(!obj.isText)outlines=keepOuterLoops(outlines);
-            if(outlines.length>0)contours.push({objId:obj.id,outlines});
+            if(outlines.length>0)contours.push({objId:obj.id,isText:!!obj.isText,outlines});
           }catch(e){}
         });
         this._objectContours=contours;
@@ -2538,23 +2845,22 @@
         const strokeGap=this.params.strokeWidth||0;
         contours.forEach(c=>{
           const outlines=c.outlines||[];if(outlines.length===0)return;
+          const isTextContour=!!c.isText;
           // 检查该元素的任意一条轮廓是否与底板掩码有像素重叠
           const anyOverlaps=outlines.some(ol=>ol&&ol.some(pt=>pointInsideBaseMask(pt)));
           outlines.forEach(outline=>{
             if(!outline||outline.length<3)return;
             ctx.beginPath();outline.forEach((pt,i)=>{const px=(pt.x-mnX)*PPU;const py=(pt.y-mnY)*PPU;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});ctx.closePath();ctx.fill();
-            // 未与底板重叠时，用 gap*2*PPU 描边来桥接间隙；已重叠时至少 2px 应对角落像素缝隙
-            ctx.lineWidth=(!anyOverlaps||basePlateGap>0)?Math.max(strokeGap*2*PPU,basePlateGap*2*PPU,2):2;
+            // 轮廓融合仅依赖轮廓自身描边，不再使用跨轮廓连线强制桥接。
+            // 文本在已重叠时使用更细的最小描边，避免出现伪连接细线。
+            if(anyOverlaps&&basePlateGap<=0){
+              ctx.lineWidth=isTextContour?1.2:2;
+            }else{
+              const minStrokePx=isTextContour?1.2:2;
+              ctx.lineWidth=Math.max(strokeGap*2*PPU,basePlateGap*2*PPU,minStrokePx);
+            }
             ctx.stroke();
           });
-          // 同一元素有多条独立轮廓（如带空格的文字）时，用细线将各轮廓质心连到第一条，确保连通
-          if(outlines.length>1){
-            const valid=outlines.filter(o=>o&&o.length>=3);
-            if(valid.length>1){
-              const cents=valid.map(o=>{let cx=0,cy=0;o.forEach(p=>{cx+=p.x;cy+=p.y;});return{x:cx/o.length,y:cy/o.length};});
-              for(let i=1;i<cents.length;i++){ctx.beginPath();ctx.moveTo((cents[0].x-mnX)*PPU,(cents[0].y-mnY)*PPU);ctx.lineTo((cents[i].x-mnX)*PPU,(cents[i].y-mnY)*PPU);ctx.lineWidth=2;ctx.stroke();}
-            }
-          }
         });
 
         const imgData=ctx.getImageData(0,0,cw,ch);
@@ -2744,6 +3050,39 @@
         }catch(e){console.error('2D layout error:',e);this._2dLayoutData=null;return null;}
       },
       _fit2DView(){if(!this._2dCanvas||!this._2dLayoutData)return;const{totalBBox}=this._2dLayoutData;const cw=this._2dCanvas.width,ch=this._2dCanvas.height;if(cw<=0||ch<=0||totalBBox.w<=0||totalBBox.h<=0)return;const padding=60;this._2dScale=Math.min((cw-padding*2)/totalBBox.w,(ch-padding*2)/totalBBox.h);this._2dOffset=new Vec2(cw/2-(totalBBox.x+totalBBox.w/2)*this._2dScale,ch/2-(totalBBox.y+totalBBox.h/2)*this._2dScale);},
+      _drawExportDimensions(ctx,scale,off){
+        if(this.workspaceView!=='files'||!this._2dLayoutData||!this._2dLayoutData.totalBBox)return;
+        const layoutBB=this._2dLayoutData.totalBBox;
+        if(!layoutBB||layoutBB.w<=0||layoutBB.h<=0)return;
+        const designBB=this._getDesignBBox()||layoutBB;
+        const rightOffset=14,bottomOffset=8,cap=1.2;
+        const x0=off.x+layoutBB.x*scale,y0=off.y+layoutBB.y*scale,x1=off.x+(layoutBB.x+layoutBB.w)*scale,y1=off.y+(layoutBB.y+layoutBB.h)*scale;
+        const xDim=x1+rightOffset*scale,yDim=y1+bottomOffset*scale;
+        const capPx=cap*scale;
+        const textW=this._formatDesignDimension(designBB.w);
+        const textH=this._formatDesignDimension(designBB.h);
+        const fontSize=Math.max(4.8,(11/Math.max(scale,0.001))*0.6)*3;
+        const lineWidthPx=Math.max(1.1,0.08*scale);
+        ctx.save();
+        ctx.strokeStyle='rgba(100,116,139,0.9)';
+        ctx.fillStyle='rgba(71,85,105,0.95)';
+        ctx.lineWidth=lineWidthPx;
+        ctx.lineCap='round';ctx.lineJoin='round';
+        ctx.font=`${fontSize}px Inter, system-ui, sans-serif`;
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        // Right vertical dimension line
+        ctx.beginPath();ctx.moveTo(xDim,y0);ctx.lineTo(xDim,y1);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(xDim-capPx,y0);ctx.lineTo(xDim+capPx,y0);ctx.moveTo(xDim-capPx,y1);ctx.lineTo(xDim+capPx,y1);ctx.stroke();
+        ctx.textAlign='left';
+        ctx.fillText(textH,xDim+10.2*scale,(y0+y1)/2);
+        // Bottom horizontal dimension line
+        ctx.textAlign='center';
+        ctx.beginPath();ctx.moveTo(x0,yDim);ctx.lineTo(x1,yDim);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(x0,yDim-capPx);ctx.lineTo(x0,yDim+capPx);ctx.moveTo(x1,yDim-capPx);ctx.lineTo(x1,yDim+capPx);ctx.stroke();
+        ctx.fillText(textW,(x0+x1)/2,yDim+3.8*scale);
+        ctx.restore();
+      },
       _render2DView(){
         if(!this._2dCtx||!this._2dCanvas)return;const ctx=this._2dCtx;const cw=this._2dCanvas.width,ch=this._2dCanvas.height;ctx.clearRect(0,0,cw,ch);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cw,ch);
         if(!this._2dLayoutData)return;const{groups}=this._2dLayoutData;const scale=this._2dScale,off=this._2dOffset;
@@ -2752,6 +3091,7 @@
           g.paths.forEach(p=>{if(p.filled&&p.svgPath){ctx.save();ctx.translate(p.objX,p.objY);ctx.rotate(p.objRotation);ctx.scale(p.objFlipX?-p.objScale:p.objScale,p.objScale);ctx.translate(-25,-25);const pp=new Path2D(p.svgPath);ctx.fillStyle='#000000';try{ctx.fill(pp,'evenodd');}catch(e){}ctx.restore();}else{if(p.pts.length<3)return;ctx.beginPath();ctx.moveTo(p.pts[0].x,p.pts[0].y);for(let i=1;i<p.pts.length;i++)ctx.lineTo(p.pts[i].x,p.pts[i].y);ctx.closePath();ctx.strokeStyle='#ff0000';ctx.lineWidth=1/scale;ctx.lineJoin='round';ctx.stroke();}});
           ctx.restore();});
         ctx.restore();
+        this._drawExportDimensions(ctx,scale,off);
       },
       _bind2DCanvas(){
         const cv=this._2dCanvas;if(!cv)return;let dragging=false,lastPt=null;
@@ -2997,30 +3337,47 @@
 
       doExportJSON(){
         const data={
-          version:'1.0.0',
+          version:'2.0.0',
+          schema:'room-sign-content-layer',
           exportTime:new Date().toISOString(),
-          basePlate:this.basePlate?{
-            width:+(this.basePlate.width.toFixed(4)),
-            height:+(this.basePlate.height.toFixed(4)),
-            unit:'mm'
-          }:null,
-          objects:this.objects.map(obj=>({
-            id:obj.id,
-            type:obj.isText?'text':'icon',
-            name:ASSETS[obj.type]?.name||obj.type,
-            x:+(obj.x.toFixed(4)),
-            y:+(obj.y.toFixed(4)),
-            scale:+(obj.scale.toFixed(6)),
-            iconWeight:+((obj.scale*100).toFixed(2)),
-            rotation:+(obj.rotation.toFixed(6)),
-            rotationDeg:+(((obj.rotation*180)/Math.PI).toFixed(2)),
-            flipX:!!obj.flipX,
-            ...(obj.isText?{text:obj.text,fontPkg:obj.fontPkg,textWeight:+((obj.textWeight||0).toFixed(2)),textContourGap:+((Number.isFinite(obj.textContourGap)?obj.textContourGap:this.params.strokeWidth).toFixed(4)),textFillPath:obj.textFillPath||obj.path,textOuterContourPath:obj.textOuterContourPath||obj.path}:{})
-          })),
-          params:{
-            displayUnit:this.displayUnit,
+          templateKey:this.currentTemplateKey||'',
+          displayUnit:this.displayUnit,
+          content:{
+            objects:this.objects.map(obj=>{
+              const base={
+                id:obj.id,
+                isText:!!obj.isText,
+                type:obj.isText?'text':'icon',
+                typeKey:obj.type,
+                assetKey:obj.type,
+                name:ASSETS[obj.type]?.name||obj.type,
+                path:obj.path,
+                x:+(obj.x.toFixed(4)),
+                y:+(obj.y.toFixed(4)),
+                scale:+(obj.scale.toFixed(6)),
+                iconWeight:+((obj.scale*100).toFixed(2)),
+                rotation:+(obj.rotation.toFixed(6)),
+                rotationDeg:+(((obj.rotation*180)/Math.PI).toFixed(2)),
+                flipX:!!obj.flipX
+              };
+              if(obj.isText){
+                base.text=obj.text;
+                base.fontPkg=obj.fontPkg;
+                base.textWeight=+((obj.textWeight||0).toFixed(2));
+                base.textLetterSpacing=+((obj.textLetterSpacing||0).toFixed(2));
+                base.textContourGap=+((Number.isFinite(obj.textContourGap)?obj.textContourGap:this.params.strokeWidth).toFixed(4));
+                base.textFillPath=obj.textFillPath||obj.path;
+                base.textOuterContourPath=obj.textOuterContourPath||obj.path;
+              }
+              return base;
+            })
+          },
+          editorDefaults:{
+            strokeWidth:this.params.strokeWidth,
+            basePlateGap:this.params.basePlateGap,
             gap:this.params.gap,
-            smooth:this.params.smooth
+            smooth:this.params.smooth,
+            letterSpacing:this.params.letterSpacing
           }
         };
         const json=JSON.stringify(data,null,2);
@@ -3029,6 +3386,82 @@
         a.download='room_sign_'+Date.now()+'.json';
         document.body.appendChild(a);a.click();document.body.removeChild(a);
         setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+      },
+
+      applyContentLayer(data){
+        if(!data||data.schema!=='room-sign-content-layer'){
+          throw new Error('Invalid content layer JSON (expected schema: room-sign-content-layer)');
+        }
+        if(data.editorDefaults){
+          const ed=data.editorDefaults;
+          if(Number.isFinite(ed.strokeWidth))this.params.strokeWidth=ed.strokeWidth;
+          if(Number.isFinite(ed.basePlateGap))this.params.basePlateGap=ed.basePlateGap;
+          if(Number.isFinite(ed.gap))this.params.gap=ed.gap;
+          if(Number.isFinite(ed.smooth))this.params.smooth=ed.smooth;
+          if(Number.isFinite(ed.letterSpacing))this.params.letterSpacing=ed.letterSpacing;
+        }
+        if(data.displayUnit){
+          this.displayUnit='';
+          this._setUnit(data.displayUnit==='inch'?'inch':'mm');
+        }
+        const newObjects=[];
+        (data.content?.objects||[]).forEach(obj=>{
+          const assetKey=obj.assetKey||obj.typeKey||('imported_'+Date.now()+'_'+Math.random());
+          ASSETS[assetKey]={name:obj.name||assetKey,path:obj.path};
+          const restored={
+            id:obj.id||(Date.now()+Math.random()),
+            type:assetKey,
+            path:obj.path,
+            x:obj.x,
+            y:obj.y,
+            scale:obj.scale,
+            rotation:obj.rotation,
+            flipX:!!obj.flipX
+          };
+          if(obj.isText){
+            restored.isText=true;
+            restored.text=obj.text;
+            restored.fontPkg=obj.fontPkg;
+            restored.textWeight=Number.isFinite(obj.textWeight)?obj.textWeight:0;
+            restored.textLetterSpacing=Number.isFinite(obj.textLetterSpacing)?obj.textLetterSpacing:0;
+            restored.textContourGap=Number.isFinite(obj.textContourGap)?obj.textContourGap:this.params.strokeWidth;
+            restored.textFillPath=obj.textFillPath||obj.path;
+            restored.textOuterContourPath=obj.textOuterContourPath||this._removePathHoles(obj.textFillPath||obj.path)||obj.path;
+          }
+          newObjects.push(restored);
+        });
+        this.objects=newObjects;
+        this.selection=null;
+        this._updateTransformSliders();
+        this._updateParamSliders();
+        this._updateHoleToggle();
+        this.render();
+        this.triggerPreview();
+      },
+
+      doImportJSON(){
+        const input=document.createElement('input');
+        input.type='file';
+        input.accept='.json,application/json';
+        input.onchange=(e)=>{
+          const file=e.target.files[0];
+          if(!file)return;
+          const reader=new FileReader();
+          reader.onload=(ev)=>{
+            try{
+              const data=JSON.parse(ev.target.result);
+              this.saveHistory();
+              if(data.templateKey&&data.templateKey!==this.currentTemplateKey){
+                if(SVG_TEMPLATES&&SVG_TEMPLATES[data.templateKey]){
+                  this._loadSVGDesign(SVG_TEMPLATES[data.templateKey].svg,data.templateKey);
+                }
+              }
+              this.applyContentLayer(data);
+            }catch(err){alert('Import error: '+err.message);console.error(err);}
+          };
+          reader.readAsText(file);
+        };
+        input.click();
       }
     };
 
@@ -3043,7 +3476,7 @@
             if(!obj?.isText)return obj;
             const fillPath=obj.textFillPath||obj.path||'';
             const contourPath=obj.textOuterContourPath||App._removePathHoles(fillPath)||fillPath;
-            return{...obj,path:fillPath,textFillPath:fillPath,textOuterContourPath:contourPath,textWeight:Number.isFinite(obj.textWeight)?obj.textWeight:0,textContourGap:Number.isFinite(obj.textContourGap)?obj.textContourGap:App.params.strokeWidth};
+            return{...obj,path:fillPath,textFillPath:fillPath,textOuterContourPath:contourPath,textWeight:Number.isFinite(obj.textWeight)?obj.textWeight:0,textLetterSpacing:Number.isFinite(obj.textLetterSpacing)?obj.textLetterSpacing:0,textContourGap:Number.isFinite(obj.textContourGap)?obj.textContourGap:App.params.strokeWidth};
           });
         }
         if(snapshot?.displayUnit){App.displayUnit='';App._setUnit(snapshot.displayUnit==='inch'?'inch':'mm');}

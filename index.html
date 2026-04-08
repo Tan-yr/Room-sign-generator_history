@@ -2805,6 +2805,7 @@
             const loader=new THREE.SVGLoader();
             const contourBorderMat=new THREE.MeshStandardMaterial({color:0x3d2314,roughness:0.9,metalness:0.1,side:THREE.DoubleSide});
             const engravedMat=new THREE.MeshStandardMaterial({color:0x5a3825,roughness:0.95,metalness:0.05,side:THREE.DoubleSide});
+            const singleEngravedMat=new THREE.MeshStandardMaterial({color:0x5a3825,roughness:0.95,metalness:0.05,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2});
             const featureDepth=1.5;
             const bodyZBias=0.01;
             const parseObjShapes=(obj,pathD)=>{
@@ -2816,31 +2817,6 @@
                 shapes.push(...s);
               });
               return shapes;
-            };
-            const shapeWorldPts=(shape,obj)=>{
-              const sx=obj.flipX?-obj.scale:obj.scale;const sy=obj.scale;
-              const cos=Math.cos(obj.rotation),sin=Math.sin(obj.rotation);
-              const localPts=shape.getPoints(30);
-              return localPts.map(pt=>{
-                const lx=(pt.x-25)*sx;const ly=(pt.y-25)*sy;
-                return{x:obj.x+lx*cos-ly*sin,y:obj.y+lx*sin+ly*cos};
-              });
-            };
-            const ptsCentroid=(pts)=>{
-              if(!pts||pts.length===0)return null;
-              let sx=0,sy=0;pts.forEach(p=>{sx+=p.x;sy+=p.y;});
-              return{x:sx/pts.length,y:sy/pts.length};
-            };
-            const shapeMostlyInContour=(pts,contourOutline)=>{
-              if(!pts||pts.length===0||!contourOutline||contourOutline.length<3)return false;
-              const maxSamples=24;
-              const step=Math.max(1,Math.floor(pts.length/maxSamples));
-              let inside=0,total=0;
-              for(let i=0;i<pts.length;i+=step){
-                total++;
-                if(this._pointInPolygon(pts[i],contourOutline))inside++;
-              }
-              return total>0&&(inside/total)>=0.65;
             };
             this.objects.forEach(obj=>{
               try{
@@ -2855,8 +2831,8 @@
                   eShapes.forEach(shape=>{
                     try{
                       const g=new THREE.ExtrudeGeometry(shape,{depth:0.45,bevelEnabled:false});
-                      const m=new THREE.Mesh(g,engravedMat);
-                      m.position.set(-25,-25,-0.45);
+                      const m=new THREE.Mesh(g,singleEngravedMat);
+                      m.position.set(-25,-25,0.01);
                       engravedGroup.add(m);
                     }catch(ge){}
                   });
@@ -2869,29 +2845,19 @@
                   return;
                 }
                 if(obj.isText){
-                  // Text border: extrude contour outlines directly, do not subtract full text holes.
+                  // Text border: extrude contour outlines as solid base layer.
                   if(contourOutlines.length>0){
-                    const fillShapes=fillPath?parseObjShapes(obj,fillPath):[];
-                    const fillShapeWorld=fillShapes.map(shape=>{const pts=shapeWorldPts(shape,obj);return{shape,pts,center:ptsCentroid(pts)};});
                     contourOutlines.forEach(contourOutline=>{
                       if(!contourOutline||contourOutline.length<3)return;
                       const solidShape=createShapeFromPts(contourOutline);
-                      const cShape=createShapeFromPts(contourOutline);
-                      if(!cShape||!solidShape)return;
+                      if(!solidShape)return;
                       try{
                         // Second-layer backing: same contour, no holes, placed below text body.
                         const backingGeo=new THREE.ExtrudeGeometry(solidShape,{depth:0.75,bevelEnabled:false});
                         const backingMesh=new THREE.Mesh(backingGeo,contourBorderMat);
                         backingMesh.position.z=-0.35;
                         group.add(backingMesh);
-                        // Subtract only the fill shapes whose centroid falls inside this contour.
-                        fillShapeWorld.forEach(item=>{
-                          if(!item.center||!this._pointInPolygon(item.center,contourOutline))return;
-                          const hole=new THREE.Path();
-                          item.pts.forEach((pt,i)=>{i===0?hole.moveTo(pt.x,pt.y):hole.lineTo(pt.x,pt.y);});
-                          cShape.holes.push(hole);
-                        });
-                        const borderGeo=new THREE.ExtrudeGeometry(cShape,{depth:featureDepth,bevelEnabled:false});
+                        const borderGeo=new THREE.ExtrudeGeometry(solidShape,{depth:featureDepth,bevelEnabled:false});
                         const borderMesh=new THREE.Mesh(borderGeo,contourBorderMat);group.add(borderMesh);
                       }catch(ge){}
                     });
@@ -2913,19 +2879,11 @@
                     if(engObjGroup.children.length>0){engObjGroup.scale.set(obj.flipX?-obj.scale:obj.scale,obj.scale,1);engObjGroup.rotation.z=obj.rotation;engObjGroup.position.set(obj.x,obj.y,0);group.add(engObjGroup);}
                   }
                 }else if(contourOutlines.length>0){
-                  const objShapes=parseObjShapes(obj,fillPath);
-                  const objShapeWorld=objShapes.map(shape=>{const pts=shapeWorldPts(shape,obj);return{shape,pts,center:ptsCentroid(pts)};});
                   contourOutlines.forEach(contourOutline=>{
                     if(!contourOutline||contourOutline.length<3)return;
                     const cShape=createShapeFromPts(contourOutline);
                     if(!cShape)return;
                     try{
-                      objShapeWorld.forEach(item=>{
-                        if(!shapeMostlyInContour(item.pts,contourOutline))return;
-                        const hole=new THREE.Path();
-                        item.pts.forEach((pt,i)=>{i===0?hole.moveTo(pt.x,pt.y):hole.lineTo(pt.x,pt.y);});
-                        cShape.holes.push(hole);
-                      });
                       const borderGeo=new THREE.ExtrudeGeometry(cShape,{depth:featureDepth,bevelEnabled:false});
                       const borderMesh=new THREE.Mesh(borderGeo,contourBorderMat);group.add(borderMesh);
                     }catch(ge){
